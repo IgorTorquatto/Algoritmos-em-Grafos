@@ -1,4 +1,5 @@
 import  pygame
+
 #Constantes Numéricas:
 TELA_MENU_LARGURA = 1000
 TELA_MENU_ALTURA = 700
@@ -30,7 +31,6 @@ RETANGULO_Y_4 = 100
 RETANGULO_Y_5 = 600
 SCORE_X = 800
 SCORE_Y = 10
-LOOP_MUSICA = 50
 TEMPO_ANIMACAO = 0.25
 CORRECAO_SEGUNDOS = 1000
 ARREDONDAMENTO = 3
@@ -38,8 +38,9 @@ DIFICULDADE_INICIAL = 50
 NUMERO_RETANGULOS = 30
 
 #Constantes Load:
-BACKGROUND = pygame.image.load("imagens/39597657-map-of-treasure-island.png")
+BACKGROUND = pygame.image.load("imagens/pirate-treasure-island.png")
 MUSICA_MENU = "audios/Sea waves with birds - Sound Effect [HQ] [TubeRipper.com].ogg"
+MUSICA_JOGO = "audios/sea waves sound effects [TubeRipper.com].ogg"
 FONTE_PADRAO = "assets/font.ttf"
 FONTE_ARIAL = "Arial"
 RETANGULO_PLAY = "assets/Play Rect.png"

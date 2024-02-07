@@ -1,5 +1,6 @@
 import pygame,sys
 from constantes import *
+from funcoes import *
 #Botões
 class Button():
     def __init__(self, image, pos, text_input, font, base_color, hovering_color):
@@ -43,13 +44,13 @@ def menu():
     pygame.display.set_caption(NOME_JOGO)
 
     pygame.mixer.music.load(MUSICA_MENU)
-    pygame.mixer.music.play(LOOP_MUSICA)
+    pygame.mixer.music.play(-1)
 
     def get_font(size):
         return pygame.font.Font(FONTE_PADRAO, size)
 
     def play():
-        pygame.quit()
+        iniciar_jogo(SCREEN)
 
     def options():
         while True:
