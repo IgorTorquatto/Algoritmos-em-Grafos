@@ -3,8 +3,6 @@ import  pygame
 #Constantes Numéricas:
 TELA_MENU_LARGURA = 1000
 TELA_MENU_ALTURA = 700
-TELA_JOGO_LARGURA = 1024
-TELA_JOGO_ALTURA = 500
 FONTE_TITULO = 30
 FONTE_TEXTO = 10
 FONTE_MAIN_MENU = 100
@@ -36,11 +34,13 @@ CORRECAO_SEGUNDOS = 1000
 ARREDONDAMENTO = 3
 DIFICULDADE_INICIAL = 50
 NUMERO_RETANGULOS = 30
+COLUNAS = 6
+LINHAS= 6
 
 #Constantes Load:
 BACKGROUND = pygame.image.load("imagens/pirate-treasure-island.png")
 MUSICA_MENU = "audios/Sea waves with birds - Sound Effect [HQ] [TubeRipper.com].ogg"
-MUSICA_JOGO = "audios/sea waves sound effects [TubeRipper.com].ogg"
+MUSICA_JOGO = "audios/Mutiny Pirate Survival RPG Soundtrack - Ape Island Theme - Track 15 - Island of the Apes [TubeRipper.com].ogg"
 FONTE_PADRAO = "assets/font.ttf"
 FONTE_ARIAL = "Arial"
 RETANGULO_PLAY = "assets/Play Rect.png"
@@ -66,4 +66,6 @@ PRETO = "#000000"
 VERDE = "#00FF00"
 AMARELO = "#b68f40"
 VERDE_CLARO = "#d7fcd4"
+VERMELHO = "#FF0000"
 LARANJA = "#FF8000"
+AZUL = "#0000FF"
