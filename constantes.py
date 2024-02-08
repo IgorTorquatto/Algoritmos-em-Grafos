@@ -36,6 +36,8 @@ DIFICULDADE_INICIAL = 50
 NUMERO_RETANGULOS = 30
 COLUNAS = 6
 LINHAS= 6
+LARGURA_RETANGULO_MAR = 50
+ALTURA_RETANGULO_MAR = 50
 
 #Constantes Load:
 BACKGROUND = pygame.image.load("imagens/pirate-treasure-island.png")
@@ -69,3 +71,5 @@ VERDE_CLARO = "#d7fcd4"
 VERMELHO = "#FF0000"
 LARANJA = "#FF8000"
 AZUL = "#0000FF"
+AZUL_CLARO = (100, 149, 237)  # Azul claro
+AZUL_ESCURO = (0, 0, 139)  # Azul escuro

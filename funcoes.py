@@ -2,7 +2,7 @@ import pygame,sys
 from constantes import *
 from Ilha import Ilha
 from Jogador import Jogador
-
+from pygame.locals import *
 
 def iniciar_jogo(tela):
 
@@ -16,21 +16,40 @@ def iniciar_jogo(tela):
     pygame.mixer.music.load(MUSICA_JOGO)
     pygame.mixer.music.play(-1)
 
+    # Número de retângulos na horizontal e vertical para preencher toda a tela
+    num_retangulos_horizontal = TELA_MENU_LARGURA // LARGURA_RETANGULO_MAR
+    num_retangulos_vertical = TELA_MENU_ALTURA // ALTURA_RETANGULO_MAR
+
     rodar = True
 
-    while rodar == True:
-        # Eventos
+    while rodar:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 rodar = False
             elif event.type == pygame.KEYDOWN:
-                if event.key == pygame.K_LEFT:
-                    jogador.mover_esquerda(ilha)
+                if event.key == pygame.K_UP:
+                    jogador.mover_para_cima(ilha)
+                elif event.key == pygame.K_DOWN:
+                    jogador.mover_para_baixo(ilha)
+                elif event.key == pygame.K_LEFT:
+                    jogador.mover_para_esquerda(ilha)
                 elif event.key == pygame.K_RIGHT:
-                    jogador.mover_direita(ilha)
+                    jogador.mover_para_direita(ilha)
 
         # Limpe a tela
-        tela.fill(AZUL)
+        tela.fill(BRANCO)
+
+        #Preencher a tela com o oceano
+        # Loop para desenhar retângulos em todas as posições na tela
+        for linha in range(num_retangulos_vertical):
+            for coluna in range(num_retangulos_horizontal):
+                x = coluna * LARGURA_RETANGULO_MAR
+                y = linha * ALTURA_RETANGULO_MAR
+                if linha % 2 == 0:
+                    cor = AZUL_CLARO
+                else:
+                    cor = AZUL_ESCURO
+                pygame.draw.rect(tela, cor, pygame.Rect(x, y, LARGURA_RETANGULO_MAR, ALTURA_RETANGULO_MAR))
 
         # Desenhe a ilha
         ilha.desenhar_ilha(tela)
