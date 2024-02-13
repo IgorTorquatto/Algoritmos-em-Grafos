@@ -2,23 +2,22 @@ import pygame,sys
 from constantes import *
 from Ilha import Ilha
 from Jogador import Jogador
-from pygame.locals import *
+from Barra_infos import Barra_infos
+import math
 
 def iniciar_jogo(tela):
 
     vertices_totais = cria_vertices()
-    arestas_totais =  cria_arestas()
+    arestas_totais = cria_arestas()
 
-    ilha = Ilha(vertices_totais,arestas_totais)
-    jogador = Jogador(0) #Jogador inicia na praia
+    jogador = Jogador(0)  # Jogador inicia na praia
+    ilha = Ilha(vertices_totais,arestas_totais,jogador)
+    barra = Barra_infos(tela)
 
+    ilha_fundo = pygame.image.load("imagens/73c76382909a6305111caddf2bdb09a6 (1).png")
     pygame.mixer.music.stop()
     pygame.mixer.music.load(MUSICA_JOGO)
     pygame.mixer.music.play(-1)
-
-    # Número de retângulos na horizontal e vertical para preencher toda a tela
-    num_retangulos_horizontal = TELA_MENU_LARGURA // LARGURA_RETANGULO_MAR
-    num_retangulos_vertical = TELA_MENU_ALTURA // ALTURA_RETANGULO_MAR
 
     rodar = True
 
@@ -26,6 +25,7 @@ def iniciar_jogo(tela):
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 rodar = False
+            #Comandos jogador mover na ilha
             elif event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_UP:
                     jogador.mover_para_cima(ilha)
@@ -36,20 +36,10 @@ def iniciar_jogo(tela):
                 elif event.key == pygame.K_RIGHT:
                     jogador.mover_para_direita(ilha)
 
-        # Limpe a tela
-        tela.fill(BRANCO)
 
-        #Preencher a tela com o oceano
-        # Loop para desenhar retângulos em todas as posições na tela
-        for linha in range(num_retangulos_vertical):
-            for coluna in range(num_retangulos_horizontal):
-                x = coluna * LARGURA_RETANGULO_MAR
-                y = linha * ALTURA_RETANGULO_MAR
-                if linha % 2 == 0:
-                    cor = AZUL_CLARO
-                else:
-                    cor = AZUL_ESCURO
-                pygame.draw.rect(tela, cor, pygame.Rect(x, y, LARGURA_RETANGULO_MAR, ALTURA_RETANGULO_MAR))
+        # Limpe a tela
+        tela.fill(AZUL_CLARO)
+        tela.blit(ilha_fundo,(0,-100))
 
         # Desenhe a ilha
         ilha.desenhar_ilha(tela)
@@ -57,8 +47,12 @@ def iniciar_jogo(tela):
         #Personagem
         jogador.desenhar_personagem(tela,ilha)
 
+        #Criar barra de informações
+        # começando em 500 na y
+        barra.desenhar_barra(tela)
+
         # Atualize a tela
-        pygame.display.flip()
+        pygame.display.update()
 
     # Encerre o Pygame
     pygame.quit()
@@ -67,15 +61,16 @@ def iniciar_jogo(tela):
 def cria_vertices():
     vertices = []
 
-    espaçamento_x = TELA_MENU_LARGURA // (COLUNAS + 1)
-    espaçamento_y = TELA_MENU_ALTURA // (LINHAS + 1)
+    espacamento_x = TELA_MENU_LARGURA // (COLUNAS + 1)
+    espacamento_y = 100
 
     for linha in range(1, LINHAS + 1):
         for coluna in range(1, COLUNAS + 1):
-            x = coluna * espaçamento_x
-            y = linha * espaçamento_y
+            x = (coluna * espacamento_x) +20
+            y = linha * espacamento_y
             vertices.append((x, y))
     return vertices
+
 
 def cria_arestas():
     arestas= {}

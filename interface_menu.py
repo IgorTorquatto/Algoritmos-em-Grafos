@@ -52,44 +52,7 @@ def menu():
     def play():
         iniciar_jogo(SCREEN)
 
-    def options():
-        while True:
-            OPTIONS_MOUSE_POS = pygame.mouse.get_pos()
 
-            SCREEN.fill(BRANCO)
-
-            OPTIONS_TEXT = get_font(FONTE_TITULO).render(TITULO, True, PRETO)
-            OPTIONS_RECT = OPTIONS_TEXT.get_rect(center=(RETANGULO_X, RETANGULO_Y_1))
-            SCREEN.blit(OPTIONS_TEXT, OPTIONS_RECT)
-
-            OPTIONS_MANUAL = get_font(FONTE_TEXTO).render(PARAGRAFO_1, True, PRETO)
-            OPTIONS_RECT2 = OPTIONS_MANUAL.get_rect(center=(RETANGULO_X, RETANGULO_Y_2))
-            SCREEN.blit(OPTIONS_MANUAL, OPTIONS_RECT2)
-
-            OPTIONS_MANUAL2 = get_font(FONTE_TEXTO).render(PARAGRAFO_2, True, PRETO)
-            OPTIONS_RECT3 = OPTIONS_MANUAL2.get_rect(center=(RETANGULO_X, RETANGULO_Y_3))
-            SCREEN.blit(OPTIONS_MANUAL2, OPTIONS_RECT3)
-
-            OPTIONS_MANUAL3 = get_font(FONTE_TEXTO).render(PARAGRAFO_3, True, PRETO)
-            OPTIONS_RECT3 = OPTIONS_MANUAL3.get_rect(center=(RETANGULO_X, RETANGULO_Y_4))
-            SCREEN.blit(OPTIONS_MANUAL3, OPTIONS_RECT3)
-
-            OPTIONS_BACK = Button(image=None, pos=(RETANGULO_X, RETANGULO_Y_5),
-                                        text_input=VOLTAR, font=get_font(FONTE_BACK), base_color=PRETO,
-                                        hovering_color=VERDE)
-
-            OPTIONS_BACK.changeColor(OPTIONS_MOUSE_POS)
-            OPTIONS_BACK.update(SCREEN)
-
-            for event in pygame.event.get():
-                if event.type == pygame.QUIT:
-                    pygame.quit()
-                    sys.exit()
-                if event.type == pygame.MOUSEBUTTONDOWN:
-                    if OPTIONS_BACK.checkForInput(OPTIONS_MOUSE_POS):
-                        main_menu()
-
-            pygame.display.update()
 
     def main_menu():
 
@@ -105,16 +68,14 @@ def menu():
             PLAY_BUTTON = Button(image=pygame.image.load(RETANGULO_PLAY), pos=(OPTIONS_X, OPTION_Y_2),
                                        text_input=JOGAR, font=get_font(FONTE_BOTOES), base_color=VERDE_CLARO,
                                        hovering_color=BRANCO)
-            OPTIONS_BUTTON = Button(image=pygame.image.load(RETANGULO_OPTIONS), pos=(OPTIONS_X, OPTION_Y_3),
-                                          text_input=MANUAL, font=get_font(FONTE_BOTOES), base_color=VERDE_CLARO,
-                                          hovering_color=BRANCO)
-            QUIT_BUTTON = Button(image=pygame.image.load(RETANGULO_QUIT), pos=(OPTIONS_X, OPTION_Y_4),
+
+            QUIT_BUTTON = Button(image=pygame.image.load(RETANGULO_QUIT), pos=(OPTIONS_X, OPTION_Y_3),
                                        text_input=SAIR, font=get_font(FONTE_BOTOES), base_color=VERDE_CLARO,
                                        hovering_color=BRANCO)
 
             SCREEN.blit(MENU_TEXT, MENU_RECT)
 
-            for button in [PLAY_BUTTON, OPTIONS_BUTTON, QUIT_BUTTON]:
+            for button in [PLAY_BUTTON, QUIT_BUTTON]:
                 button.changeColor(MENU_MOUSE_POS)
                 button.update(SCREEN)
 
@@ -125,8 +86,6 @@ def menu():
                 if event.type == pygame.MOUSEBUTTONDOWN:
                     if PLAY_BUTTON.checkForInput(MENU_MOUSE_POS):
                         play()
-                    if OPTIONS_BUTTON.checkForInput(MENU_MOUSE_POS):
-                        options()
                     if QUIT_BUTTON.checkForInput(MENU_MOUSE_POS):
                         pygame.quit()
                         sys.exit()
