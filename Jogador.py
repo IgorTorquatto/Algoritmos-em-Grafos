@@ -3,6 +3,8 @@ from constantes import *
 class Jogador:
     def __init__(self, posicao_inicial):
         self.posicao = posicao_inicial
+        self.vida = 100
+        self.ataque = 50
 
     def mover_para_cima(self, ilha):
         if self.posicao - COLUNAS >= 0:

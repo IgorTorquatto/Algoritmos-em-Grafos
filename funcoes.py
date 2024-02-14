@@ -3,7 +3,7 @@ from constantes import *
 from Ilha import Ilha
 from Jogador import Jogador
 from Barra_infos import Barra_infos
-import math
+
 
 def iniciar_jogo(tela):
 
@@ -11,13 +11,15 @@ def iniciar_jogo(tela):
     arestas_totais = cria_arestas()
 
     jogador = Jogador(0)  # Jogador inicia na praia
-    ilha = Ilha(vertices_totais,arestas_totais,jogador)
-    barra = Barra_infos(tela)
+    ilha = Ilha(vertices_totais, arestas_totais, jogador)
+    barra = Barra_infos(tela, ilha)
 
-    ilha_fundo = pygame.image.load("imagens/73c76382909a6305111caddf2bdb09a6 (1).png")
     pygame.mixer.music.stop()
     pygame.mixer.music.load(MUSICA_JOGO)
     pygame.mixer.music.play(-1)
+
+    # Distribuir inimigos antes do loop principal
+    ilha.distribuir_inimigos()
 
     rodar = True
 
@@ -25,7 +27,7 @@ def iniciar_jogo(tela):
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 rodar = False
-            #Comandos jogador mover na ilha
+            # Comandos jogador mover na ilha
             elif event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_UP:
                     jogador.mover_para_cima(ilha)
@@ -36,18 +38,17 @@ def iniciar_jogo(tela):
                 elif event.key == pygame.K_RIGHT:
                     jogador.mover_para_direita(ilha)
 
-
         # Limpe a tela
         tela.fill(AZUL_CLARO)
-        tela.blit(ilha_fundo,(0,-100))
+        tela.blit(ILHA_FUNDO, (0, -100))
 
         # Desenhe a ilha
         ilha.desenhar_ilha(tela)
 
-        #Personagem
-        jogador.desenhar_personagem(tela,ilha)
+        # Personagem
+        jogador.desenhar_personagem(tela, ilha)
 
-        #Criar barra de informações
+        # Criar barra de informações
         # começando em 500 na y
         barra.desenhar_barra(tela)
 

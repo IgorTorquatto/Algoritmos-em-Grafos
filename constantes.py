@@ -41,6 +41,7 @@ ALTURA_RETANGULO_MAR = 50
 
 #Constantes Load:
 BACKGROUND = pygame.image.load("imagens/pirate-treasure-island.png")
+ILHA_FUNDO = pygame.image.load("imagens/73c76382909a6305111caddf2bdb09a6 (1).png")
 MUSICA_MENU = "audios/Sea waves with birds - Sound Effect [HQ] [TubeRipper.com].ogg"
 MUSICA_JOGO = "audios/Mutiny Pirate Survival RPG Soundtrack - Ape Island Theme - Track 15 - Island of the Apes [TubeRipper.com].ogg"
 FONTE_PADRAO = "assets/font.ttf"
