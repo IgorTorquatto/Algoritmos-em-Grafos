@@ -2,8 +2,7 @@ import pygame,sys
 from constantes import *
 from Ilha import Ilha
 from Jogador import Jogador
-from Barra_infos import Barra_infos
-
+from Barra import Barra
 
 def iniciar_jogo(tela):
 
@@ -12,7 +11,7 @@ def iniciar_jogo(tela):
 
     jogador = Jogador(0)  # Jogador inicia na praia
     ilha = Ilha(vertices_totais, arestas_totais, jogador)
-    barra = Barra_infos(tela, ilha)
+    barra = Barra(tela, ilha)
 
     pygame.mixer.music.stop()
     pygame.mixer.music.load(MUSICA_JOGO)
@@ -59,6 +58,9 @@ def iniciar_jogo(tela):
     # Encerre o Pygame
     pygame.quit()
     sys.exit()
+
+
+#Para criar o grafo/ilha precisamos criar os vértices e arestas:
 
 def cria_vertices():
     vertices = []

@@ -1,5 +1,6 @@
 import pygame
 from constantes import *
+from Planta import Planta
 class Jogador:
     def __init__(self, posicao_inicial):
         self.posicao = posicao_inicial
@@ -26,3 +27,5 @@ class Jogador:
 
     def desenhar_personagem(self, screen, ilha):
         pygame.draw.circle(screen, VERMELHO, ilha.vertices[self.posicao], 20)
+
+
