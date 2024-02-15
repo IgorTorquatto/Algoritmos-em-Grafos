@@ -20,6 +20,7 @@ def iniciar_jogo(tela):
 
     # Distribuir inimigos antes do loop principal
     ilha.distribuir_inimigos()
+    ilha.distribuir_plantas()
 
     rodar = True
 

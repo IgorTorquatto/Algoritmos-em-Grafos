@@ -5,6 +5,8 @@ class Jogador:
         self.posicao = posicao_inicial
         self.vida = 100
         self.ataque = 50
+        self.tesouro_capturado = 0
+        self.tesouro_transportado = 0
 
     def mover_para_cima(self, ilha):
         if self.posicao - COLUNAS >= 0:

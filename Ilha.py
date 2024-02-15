@@ -2,6 +2,8 @@ import pygame
 from constantes import *
 from Onca import Onca
 from Crocodilo import Crocodilo
+from Formiga import Formiga
+from Planta import Planta
 import random
 
 
@@ -23,13 +25,30 @@ class Ilha:
                 pygame.draw.line(screen, MARROM, self.vertices[vertice], self.vertices[vizinho], 2)
 
     def distribuir_inimigos(self):
-        inimigos = [Onca(), Crocodilo()]
+        qtd_inimigos = 0
+        vertices_utilizados = set()  # Conjunto para armazenar vértices já utilizados
 
-        for vertice in range(1,25):
+        while qtd_inimigos < 5:  # Distribuir 5 inimigos
+            indice_vertice_aleatorio = random.randint(1, 25)
+            if indice_vertice_aleatorio not in self.recursos_por_vertice and indice_vertice_aleatorio not in vertices_utilizados:
+                inimigo = random.choice([Onca(), Crocodilo(), Formiga()])
+                self.recursos_por_vertice[indice_vertice_aleatorio] = [inimigo]
+                vertices_utilizados.add(indice_vertice_aleatorio)
+                qtd_inimigos += 1
+       # print(qtd_inimigos)
 
-            inimigo = random.choice(inimigos)
-            # Adicione o inimigo ao vértice
-            self.recursos_por_vertice[vertice] = [inimigo]
+    def distribuir_plantas(self):
+        qtd_plantas = 0
+        vertices_utilizados = set()  # Conjunto para armazenar vértices já utilizados
+
+        while qtd_plantas < 5:  # Distribuir 5 plantas
+            indice_vertice_aleatorio = random.randint(1, 25)
+            if indice_vertice_aleatorio not in self.recursos_por_vertice and indice_vertice_aleatorio not in vertices_utilizados:
+                planta = Planta()
+                self.recursos_por_vertice[indice_vertice_aleatorio] = [planta]
+                vertices_utilizados.add(indice_vertice_aleatorio)
+                qtd_plantas += 1
+        #print(qtd_plantas)
 
     def obter_descricao_vertice(self):
         vertice_atual = self.jogador.posicao
