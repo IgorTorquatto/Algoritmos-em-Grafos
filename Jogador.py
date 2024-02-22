@@ -1,6 +1,7 @@
 import pygame
 from constantes import *
 from Planta import Planta
+
 class Jogador:
     def __init__(self, posicao_inicial):
         self.posicao = posicao_inicial
@@ -53,7 +54,7 @@ class Jogador:
             self.posicao += 1
 
     def desenhar_personagem(self, screen, ilha):
-       pygame.draw.circle(screen, VERMELHO, (0,0), 20)
+       pygame.draw.circle(screen, VERMELHO, ilha.grafo[self.posicao][0], 20)  # ilha.grafo[self.posicao][0] o primiero indice é o [vertice] o segundo indice é a [posicao daquele vertice]
 
     def consumir_planta(self,ilha,planta):
         self.aumentar_vida(planta.get_cura()) #tem que passar um valor que é a cura da planta

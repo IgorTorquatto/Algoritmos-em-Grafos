@@ -57,7 +57,6 @@ class Ilha:
                     posicao_vertices.append((x, y))
 
 
-
             # Todo vértice é representado por uma chave ( numero do vertice) e o seu valor( o que contém em cada vértice) , o valor do vértice é uma lista
             # Essa lista pode conter objetos que são os elementos que estão no vértice, porém a primeira posição dessa lista sempre armazenará a posição daquele vértice na tela
             # Associar posições aos vértices no grafo:
@@ -68,12 +67,28 @@ class Ilha:
         def desenhar_ilha(self, tela):
 
             for vertice in range(self.qtd_vertices):
+                #Desenha vértices
                 pygame.draw.circle(tela, MARROM, self.grafo[vertice][0], 10)
 
-            # Desenhando arestas
-            #for vertice in range(self.qtd_vertices):
-               # for vizinho in self.grafo[vertice]:
-                 #   pygame.draw.line(tela, PRETO, posicao_vertices[vertice], posicao_vertices[vizinho], 2)
+                # Desenhar arestas para vizinhos horizontais e verticais
+                linha, coluna = vertice // COLUNAS, vertice % COLUNAS
+                # Vizinho à esquerda
+                if coluna > 0:
+                    vizinho_esquerda = vertice - 1
+                    pygame.draw.line(tela, MARROM, self.grafo[vertice][0], self.grafo[vizinho_esquerda][0], 2)
+                # Vizinho à direita
+                if coluna < COLUNAS - 1:
+                    vizinho_direita = vertice + 1
+                    pygame.draw.line(tela, MARROM, self.grafo[vertice][0], self.grafo[vizinho_direita][0], 2)
+                # Vizinho acima
+                if linha > 0:
+                    vizinho_cima = vertice - COLUNAS
+                    pygame.draw.line(tela, MARROM, self.grafo[vertice][0], self.grafo[vizinho_cima][0], 2)
+                # Vizinho abaixo
+                if linha < LINHAS - 1:
+                    vizinho_baixo = vertice + COLUNAS
+                    pygame.draw.line(tela, MARROM, self.grafo[vertice][0], self.grafo[vizinho_baixo][0], 2)
+
 
         def distribuir_inimigos(self):
             qtd_inimigos_inicial = 0
