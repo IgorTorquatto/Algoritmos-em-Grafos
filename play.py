@@ -3,21 +3,26 @@ from constantes import *
 from Ilha import Ilha
 from Jogador import Jogador
 from Barra import Barra
+from Planta import Planta
+import time
 
 def iniciar_jogo(tela):
 
-    vertices_totais = cria_vertices()
-    arestas_totais = cria_arestas()
+    #vertices_totais = cria_vertices()
+    #arestas_totais = cria_arestas()
 
     jogador = Jogador(0)  # Jogador inicia na praia
-    ilha = Ilha(vertices_totais, arestas_totais, jogador)
+    ilha = Ilha(jogador)
+    ilha.set_qtd_inimigos(5) #definindo quantidade de inimigos
+    ilha.set_qtd_plantas(5) #definindo quantidade de plantas
     barra = Barra(tela, ilha)
 
     pygame.mixer.music.stop()
     pygame.mixer.music.load(MUSICA_JOGO)
     pygame.mixer.music.play(-1)
 
-    # Distribuir inimigos antes do loop principal
+    # Distribuir inimigos,plantas...
+    ilha.associar_posicoes_aos_vertices()
     ilha.distribuir_inimigos()
     ilha.distribuir_plantas()
 
@@ -33,10 +38,19 @@ def iniciar_jogo(tela):
                     jogador.mover_para_cima(ilha)
                 elif event.key == pygame.K_DOWN:
                     jogador.mover_para_baixo(ilha)
+                    jogador.diminuir_vida(20)
                 elif event.key == pygame.K_LEFT:
                     jogador.mover_para_esquerda(ilha)
                 elif event.key == pygame.K_RIGHT:
                     jogador.mover_para_direita(ilha)
+                    #jogador.aumentar_vida(10)
+
+
+        if(jogador.get_vida() == 0):
+            #Adicionar tela de perdeu
+            print("Perdeu")
+            rodar = False
+
 
         # Limpe a tela
         tela.fill(AZUL_CLARO)
@@ -58,52 +72,3 @@ def iniciar_jogo(tela):
     # Encerre o Pygame
     pygame.quit()
     sys.exit()
-
-
-#Para criar o grafo/ilha precisamos criar os vértices e arestas:
-
-def cria_vertices():
-    vertices = []
-
-    espacamento_x = TELA_MENU_LARGURA // (COLUNAS + 1)
-    espacamento_y = 100
-
-    for linha in range(1, LINHAS + 1):
-        for coluna in range(1, COLUNAS + 1):
-            x = (coluna * espacamento_x) +20
-            y = linha * espacamento_y
-            vertices.append((x, y))
-    return vertices
-
-
-def cria_arestas():
-    arestas= {}
-
-    for linha in range( LINHAS ):
-        for coluna in range(COLUNAS):
-            vertice_atual = linha * COLUNAS + coluna
-            vizinhos = []
-
-            # Vizinho à esquerda
-            if coluna > 0:
-                vizinho_esquerda = vertice_atual - 1
-                vizinhos.append(vizinho_esquerda)
-
-            # Vizinho à direita
-            if coluna < COLUNAS - 1:
-                vizinho_direita = vertice_atual + 1
-                vizinhos.append(vizinho_direita)
-
-            # Vizinho acima
-            if linha > 0:
-                vizinho_acima = vertice_atual - COLUNAS
-                vizinhos.append(vizinho_acima)
-
-            # Vizinho abaixo
-            if linha < LINHAS - 1:
-                vizinho_abaixo = vertice_atual + COLUNAS
-                vizinhos.append(vizinho_abaixo)
-
-            arestas[vertice_atual] = vizinhos
-
-    return arestas

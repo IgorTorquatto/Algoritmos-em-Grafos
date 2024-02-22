@@ -40,7 +40,8 @@ class Barra:
         #Seção de descrição do vértice
 
         mensagem_vertice = [
-            self.ilha.obter_descricao_vertice()
+            self.ilha.obter_descricao_vertice(),
+            ""
         ]
 
 
@@ -60,8 +61,20 @@ class Barra:
         tela.blit(informacoes_jogador, (posicao_x_infos_jogador, posicao_y_infos_jogador))
 
         posicao_x_infos_jogador += 180
+        if(self.ilha.jogador.get_vida() < 50):
+            texto_vida = fonte.render(mensagens_jogador[0], True, VERMELHO)
+            tela.blit(texto_vida, (posicao_x_infos_jogador, posicao_y_infos_jogador))
+            posicao_x_infos_jogador += 180
+        elif(self.ilha.jogador.get_vida() == 50):
+            texto_vida = fonte.render(mensagens_jogador[0], True, AMARELO)
+            tela.blit(texto_vida, (posicao_x_infos_jogador, posicao_y_infos_jogador))
+            posicao_x_infos_jogador += 180
+        else:
+            texto_vida = fonte.render(mensagens_jogador[0], True, VERDE)
+            tela.blit(texto_vida, (posicao_x_infos_jogador, posicao_y_infos_jogador))
+            posicao_x_infos_jogador += 180
 
-        for i in range(0,4):
+        for i in range(1,4):
             texto = fonte.render(mensagens_jogador[i],True,BRANCO)
             tela.blit(texto,(posicao_x_infos_jogador,posicao_y_infos_jogador))
             posicao_x_infos_jogador+=180
