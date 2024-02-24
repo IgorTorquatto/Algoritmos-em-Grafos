@@ -23,6 +23,7 @@ def iniciar_jogo(tela):
 
     # Distribuir inimigos,plantas...
     ilha.associar_posicoes_aos_vertices()
+    ilha.construir_arestas()
     ilha.distribuir_inimigos()
     ilha.distribuir_plantas()
 

@@ -15,10 +15,12 @@ class Ilha:
             self.qtd_plantas = 0
             self.grafo = {v: [] for v in range(self.qtd_vertices)}
             #inicializa o atributo grafo com um dicionário em que as chaves são os números de 1 até qtd_vertices (que representa o número total de vértices no grafo) e os valores são listas vazias.
-        # Isso cria a estrutura básica para armazenar a lista de adjacências do grafo, que será atualizada conforme as arestas são adicionadas.
-
-        # Cada vértice do grafo é representado como uma chave no dicionário, e cada chave tem uma lista associada a ela. Essa lista pode conter vários objetos,
-        # e esses objetos são os elementos armazenados nos vértices do grafo.
+            # Isso cria a estrutura básica para armazenar a lista de adjacências do grafo, que será atualizada conforme as arestas são adicionadas.
+            # Cada vértice do grafo é representado como uma chave no dicionário, e cada chave tem uma lista associada a ela. Essa lista pode conter vários objetos,
+             # e esses objetos são os elementos armazenados nos vértices do grafo.
+            self.arestas = []  # Lista para armazenar todas as arestas do grafo
+            #cada aresta na lista self.arestas é representada como uma tupla contendo dois números, que são os índices dos vértices que a aresta conecta.
+            # O primeiro número na tupla é o índice do vértice de origem e o segundo número é o índice do vértice de destino.
 
         def get_qtd_vertices(self):
             return self.qtd_vertices
@@ -64,31 +66,35 @@ class Ilha:
                 # Atribuir a posição ao primeiro elemento da lista de cada vértice
                 self.grafo[vertice].insert(0, posicao_vertices[vertice])
 
+        def construir_arestas(self):
+            for vertice in range(self.qtd_vertices):
+                linha, coluna = vertice // COLUNAS, vertice % COLUNAS
+
+                # Vizinho à esquerda
+                if coluna > 0:
+                    vizinho_esquerda = vertice - 1
+                    self.arestas.append((vertice, vizinho_esquerda))
+                # Vizinho à direita
+                if coluna < COLUNAS - 1:
+                    vizinho_direita = vertice + 1
+                    self.arestas.append((vertice, vizinho_direita))
+                # Vizinho acima
+                if linha > 0:
+                    vizinho_cima = vertice - COLUNAS
+                    self.arestas.append((vertice, vizinho_cima))
+                # Vizinho abaixo
+                if linha < LINHAS - 1:
+                    vizinho_baixo = vertice + COLUNAS
+                    self.arestas.append((vertice, vizinho_baixo))
         def desenhar_ilha(self, tela):
 
             for vertice in range(self.qtd_vertices):
                 #Desenha vértices
                 pygame.draw.circle(tela, MARROM, self.grafo[vertice][0], 10)
 
-                # Desenhar arestas para vizinhos horizontais e verticais
-                linha, coluna = vertice // COLUNAS, vertice % COLUNAS
-                # Vizinho à esquerda
-                if coluna > 0:
-                    vizinho_esquerda = vertice - 1
-                    pygame.draw.line(tela, MARROM, self.grafo[vertice][0], self.grafo[vizinho_esquerda][0], 2)
-                # Vizinho à direita
-                if coluna < COLUNAS - 1:
-                    vizinho_direita = vertice + 1
-                    pygame.draw.line(tela, MARROM, self.grafo[vertice][0], self.grafo[vizinho_direita][0], 2)
-                # Vizinho acima
-                if linha > 0:
-                    vizinho_cima = vertice - COLUNAS
-                    pygame.draw.line(tela, MARROM, self.grafo[vertice][0], self.grafo[vizinho_cima][0], 2)
-                # Vizinho abaixo
-                if linha < LINHAS - 1:
-                    vizinho_baixo = vertice + COLUNAS
-                    pygame.draw.line(tela, MARROM, self.grafo[vertice][0], self.grafo[vizinho_baixo][0], 2)
-
+            # Desenha arestas
+            for aresta in self.arestas:
+                pygame.draw.line(tela, MARROM, self.grafo[aresta[0]][0], self.grafo[aresta[1]][0], 2)
 
         def distribuir_inimigos(self):
             qtd_inimigos_inicial = 0
