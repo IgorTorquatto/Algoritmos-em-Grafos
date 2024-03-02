@@ -1,14 +1,12 @@
 import pygame
 from constantes import *
-from Onca import Onca
-from Crocodilo import Crocodilo
-from Formiga import Formiga
-from Planta import Planta
+
 
 class Barra:
-    def __init__(self,tela,ilha):
+    def __init__(self,tela,ilha,jogador):
         self.tela= tela
         self.ilha = ilha
+        self.jogador = jogador
 
     def desenhar_barra(self,tela):
         fonte = pygame.font.Font(None,21)
@@ -25,10 +23,10 @@ class Barra:
 
         #Seção de infos
         mensagens_jogador = [
-            "Pontos de vida: "+ str(self.ilha.jogador.vida),
-            "Dano de ataque: " + str(self.ilha.jogador.ataque),
-            "Tesouro capturado: "+ str(self.ilha.jogador.tesouro_capturado),
-            "Tesouro transportado: "+ str(self.ilha.jogador.tesouro_transportado)
+            "Pontos de vida: "+ str(self.jogador.get_vida()),
+            "Dano de ataque: " + str(self.jogador.get_ataque()),
+            "Tesouro capturado: "+ str(self.jogador.get_tesouro_capturado()),
+            "Tesouro transportado: "+ str(self.jogador.get_tesouro_transportado())
         ]
 
         mensagens_ilha = [
@@ -40,7 +38,7 @@ class Barra:
         #Seção de descrição do vértice
 
         mensagem_vertice = [
-            self.ilha.obter_descricao_vertice(),
+            self.ilha.obter_descricao_vertice(self.jogador),
             ""
         ]
 
@@ -61,11 +59,11 @@ class Barra:
         tela.blit(informacoes_jogador, (posicao_x_infos_jogador, posicao_y_infos_jogador))
 
         posicao_x_infos_jogador += 180
-        if(self.ilha.jogador.get_vida() < 50):
+        if(self.jogador.get_vida() < 50):
             texto_vida = fonte.render(mensagens_jogador[0], True, VERMELHO)
             tela.blit(texto_vida, (posicao_x_infos_jogador, posicao_y_infos_jogador))
             posicao_x_infos_jogador += 180
-        elif(self.ilha.jogador.get_vida() == 50):
+        elif(self.jogador.get_vida() == 50):
             texto_vida = fonte.render(mensagens_jogador[0], True, AMARELO)
             tela.blit(texto_vida, (posicao_x_infos_jogador, posicao_y_infos_jogador))
             posicao_x_infos_jogador += 180
@@ -103,4 +101,39 @@ class Barra:
 
         descricao_vertice = fonte.render(mensagem_vertice[0],True,BRANCO)
         tela.blit(descricao_vertice,(20,650))
+
+    #Recebe a tela, uma pergunta(string), imprime na barra a pergunta e devolve a resposta "S" ou "N"
+    def perguntar_sim_ou_nao(self,tela,pergunta):
+        resposta = None
+        fonte = pygame.font.Font(None, 21)
+        clock = pygame.time.Clock()
+
+        while resposta not in ['S', 'N']:
+
+            # Desenhar a pergunta na tela
+            pergunta_texto = fonte.render(pergunta, True, LARANJA_PERGUNTA)
+            tela.blit(pergunta_texto, (400,760))
+
+            # Atualizar a tela
+            pygame.display.flip()
+
+            # Esperar um momento antes de verificar a entrada do usuário novamente
+            clock.tick(30)
+
+            # Verificar eventos
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    pygame.quit()
+                    exit()
+                elif event.type == pygame.KEYDOWN:
+                    if event.key == pygame.K_s:
+                        resposta = 'S'
+                    elif event.key == pygame.K_n:
+                        resposta = 'N'
+
+        return resposta
+
+
+
+
 

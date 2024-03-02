@@ -8,26 +8,32 @@ import time
 
 def iniciar_jogo(tela):
 
-    #vertices_totais = cria_vertices()
-    #arestas_totais = cria_arestas()
-
-    jogador = Jogador(0)  # Jogador inicia na praia
-    ilha = Ilha(jogador)
+    ilha = Ilha()  # Inicializa o grafo da ilha
     ilha.set_qtd_inimigos(5) #definindo quantidade de inimigos
     ilha.set_qtd_plantas(5) #definindo quantidade de plantas
-    barra = Barra(tela, ilha)
 
     pygame.mixer.music.stop()
     pygame.mixer.music.load(MUSICA_JOGO)
     pygame.mixer.music.play(-1)
 
+    # Definir posições dos vértices e construir arestas
+    ilha.associar_posicoes_aos_vertices() # A função associar_posicoes_aos_vertices além de associar uma posição (x,y) para cada vértice coloca essa posicao no indice 0 de cada lista de cada vértice
+    ilha.construir_arestas() # A função de construir arestas além de construir as arestas adiciona cada uma na lista de arestas do Grafo onde podemos ter acesso ao vértice assim [(vertice_de_origem,vertice_de_destino)]
+
     # Distribuir inimigos,plantas...
-    ilha.associar_posicoes_aos_vertices()
-    ilha.construir_arestas()
     ilha.distribuir_inimigos()
     ilha.distribuir_plantas()
 
+    #Jogador
+    jogador = Jogador(ilha)
+    barra = Barra(tela, ilha, jogador)  # barra para apresentar as informações dos eventos no grafo
+
+    #Podemos imprimir a matriz de adjacencias do grafo e suas arestas
+    #ilha.imprimir_matriz_adjacencias()
+    #ilha.imprimir_arestas()
+
     rodar = True
+    resposta = None
 
     while rodar:
         for event in pygame.event.get():
@@ -39,18 +45,10 @@ def iniciar_jogo(tela):
                     jogador.mover_para_cima(ilha)
                 elif event.key == pygame.K_DOWN:
                     jogador.mover_para_baixo(ilha)
-                    jogador.diminuir_vida(20)
                 elif event.key == pygame.K_LEFT:
                     jogador.mover_para_esquerda(ilha)
                 elif event.key == pygame.K_RIGHT:
                     jogador.mover_para_direita(ilha)
-                    #jogador.aumentar_vida(10)
-
-
-        if(jogador.get_vida() == 0):
-            #Adicionar tela de perdeu
-            print("Perdeu")
-            rodar = False
 
 
         # Limpe a tela
@@ -69,6 +67,15 @@ def iniciar_jogo(tela):
 
         # Atualize a tela
         pygame.display.update()
+
+        #Condição de derrota
+        if (jogador.get_vida() == 0):
+            # Adicionar tela de perdeu
+            print("Perdeu")
+            rodar = False
+
+        #Interagir com o jogador de acordo com que tem no vértice que ele está
+        #barra.interagir_jogador(tela,ilha)
 
     # Encerre o Pygame
     pygame.quit()

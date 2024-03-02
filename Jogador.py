@@ -3,8 +3,8 @@ from constantes import *
 from Planta import Planta
 
 class Jogador:
-    def __init__(self, posicao_inicial):
-        self.posicao = posicao_inicial
+    def __init__(self, ilha):
+        self.posicao = list(ilha.grafo.keys())[0] #transforma o dict de grafo em lista e pega o primeiro indice
         self.vida = 100
         self.ataque = 50
         self.tesouro_capturado = 0
@@ -12,6 +12,9 @@ class Jogador:
 
     def get_posicao(self):
         return self.posicao
+
+    def set_posicao(self,nova_posicao):
+        self.posicao = nova_posicao
 
     def get_vida(self):
         return self.vida
@@ -53,9 +56,9 @@ class Jogador:
         if (self.posicao + 1) % COLUNAS != 0:
             self.posicao += 1
 
-    def desenhar_personagem(self, screen, ilha):
-       pygame.draw.circle(screen, VERMELHO, ilha.grafo[self.posicao][0], 20)  # ilha.grafo[self.posicao][0] o primiero indice é o [vertice] o segundo indice é a [posicao daquele vertice]
+    def desenhar_personagem(self, tela, ilha):
+       pygame.draw.circle(tela, VERMELHO, ilha.grafo[self.posicao][0], 20)  # passamos a chave (self.posicao -> que é o vertice onde o jogador está) e o indice 0 da lista desse vertice (onde se encontra a posição (x,y) a ser impressa
 
-    def consumir_planta(self,ilha,planta):
+    def consumir_planta(self,planta):
         self.aumentar_vida(planta.get_cura()) #tem que passar um valor que é a cura da planta
         planta.descricao = "Planta consumida"
