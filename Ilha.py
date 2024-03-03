@@ -4,6 +4,13 @@ from Onca import Onca
 from Crocodilo import Crocodilo
 from Formiga import Formiga
 from Planta import Planta
+from Adaga import Adaga
+from Pistola import Pistola
+from Espada import Espada
+from AreiaMovediça import AreiaMovedica
+from GasVenenoso import GasVenenoso
+from PVenenosa import PVenenosa
+
 import random
 
 
@@ -12,6 +19,8 @@ class Ilha:
             self.qtd_vertices = LINHAS * COLUNAS #Criar um grafo tabuleiro 5*5
             self.qtd_inimigos = 0
             self.qtd_plantas = 0
+            self.qtd_armas = 0
+            self.qtd_perigos = 0
             self.grafo = {v: [] for v in range(self.qtd_vertices)}
             #inicializa o atributo grafo com um dicionário em que as chaves são os números de 1 até qtd_vertices (que representa o número total de vértices no grafo) e os valores são listas vazias.
             # Isso cria a estrutura básica para armazenar a lista de adjacências do grafo, que será atualizada conforme as arestas são adicionadas.
@@ -32,8 +41,19 @@ class Ilha:
         def set_qtd_plantas(self,quantidade_plantas):
             self.qtd_plantas = quantidade_plantas
 
+        def diminui_planta(self,valor):
+            self.qtd_plantas+= valor
+
+        def diminui_perigo(self,valor):
+            self.qtd_perigos+= valor
         def get_qtd_inimigos(self):
             return self.qtd_inimigos
+
+        def set_qtd_armas(self,quantidade_armas):
+            self.qtd_armas = quantidade_armas
+
+        def set_qtd_perigos(self,quantidade_perigos):
+            self.qtd_perigos = quantidade_perigos
 
         def adicionar_objeto(self, vertice, objeto):
             if vertice in self.grafo:
@@ -99,37 +119,51 @@ class Ilha:
                 pygame.draw.line(tela, MARROM, self.grafo[aresta[0]][0], self.grafo[aresta[1]][0], 2)
                 # Esta linha desenha uma linha entre dois vértices do grafo na tela, usando as posições (x, y) desses vértices.
 
-        def distribuir_inimigos(self):
-            qtd_inimigos_inicial = 0
-            vertices_utilizados = set()  # Conjunto para armazenar vértices já utilizados
+        def distribuir_armas(self):
+            vertices = list(range(1, self.qtd_vertices))  # Lista de todos os vértices possíveis
+            random.shuffle(vertices)  # Embaralha os vértices
 
-            while qtd_inimigos_inicial < self.qtd_inimigos:
-                indice_vertice_aleatorio = random.randint(0,
-                                                          self.qtd_vertices - 1)  # Distribui inimigos em vértices aleatórios
-                if indice_vertice_aleatorio not in vertices_utilizados:
-                    inimigo = random.choice([Onca(), Crocodilo(), Formiga()])
-                    self.adicionar_objeto(indice_vertice_aleatorio, inimigo)  # Adiciona o inimigo ao vértice
-                    vertices_utilizados.add(indice_vertice_aleatorio)
-                    qtd_inimigos_inicial += 1
+            # Distribui as armas entre os vértices
+            for i in range(min(self.qtd_armas, len(vertices))):
+                vertice = vertices[i]
+                arma = random.choice([Espada(), Pistola(), Adaga()])
+                self.adicionar_objeto(vertice, arma)
 
         def distribuir_plantas(self):
-            qtd_plantas_inicial = 0
-            vertices_utilizados = set()  # Conjunto para armazenar vértices já utilizados
+            vertices = list(range(1, self.qtd_vertices))  # Lista de todos os vértices possíveis
+            random.shuffle(vertices)  # Embaralha os vértices
 
-            while qtd_plantas_inicial < self.qtd_plantas:
-                indice_vertice_aleatorio = random.randint(0, self.qtd_vertices - 1)
-                if indice_vertice_aleatorio not in vertices_utilizados:
-                    planta = Planta()
-                    self.adicionar_objeto(indice_vertice_aleatorio, planta)
-                    vertices_utilizados.add(indice_vertice_aleatorio)
-                    qtd_plantas_inicial += 1
+            # Distribui as plantas entre os vértices
+            for i in range(min(self.qtd_plantas, len(vertices))):
+                vertice = vertices[i]
+                planta = Planta()
+                self.adicionar_objeto(vertice, planta)
 
-        def obter_descricao_vertice(self,jogador):
+        def distribuir_inimigos(self):
+            vertices = list(range(1, self.qtd_vertices))  # Lista de todos os vértices possíveis
+            random.shuffle(vertices)  # Embaralha os vértices
+
+            # Distribui os inimigos entre os vértices
+            for i in range(min(self.qtd_inimigos, len(vertices))):
+                vertice = vertices[i]
+                inimigo = random.choice([Onca(), Crocodilo(), Formiga()])
+                self.adicionar_objeto(vertice, inimigo)
+
+        def distribuir_perigos(self):
+            vertices = list(range(1, self.qtd_vertices))  # Lista de todos os vértices possíveis
+            random.shuffle(vertices)  # Embaralha os vértices
+
+            # Distribui os perigos entre os vértices
+            for i in range(min(self.qtd_perigos, len(vertices))):
+                vertice = vertices[i]
+                perigo = random.choice([AreiaMovedica(), PVenenosa(), GasVenenoso()])
+                self.adicionar_objeto(vertice, perigo)
+
+        def obter_descricao_vertice(self,jogador,ilha):
             vertice_atual = jogador.get_posicao()
             if vertice_atual in self.grafo:
                 objetos_vertice = self.grafo[vertice_atual]
-                if len(objetos_vertice) > 1:
-                    # Se houver mais de um objeto no vértice (além da posição), acessa a descrição do segundo elemento
+                if len(objetos_vertice) > 1: #Como o índice 0 têm a posição (x,y) do vértice o len(objetos_vertice) sempre será maior que 1
                     descricao = objetos_vertice[1].descricao
                     return descricao
             return "Nenhum recurso neste vértice"

@@ -33,32 +33,37 @@ class Jogador:
             self.vida = 100
         else:
             self.vida += valor
-
     def diminuir_vida(self,valor):
-        self.vida-=valor
+        self.vida-= valor
 
     def aumentar_dano_de_ataque(self,valor):
         self.ataque+=valor
 
-    def mover_para_cima(self, ilha):
+    def mover_para_cima(self):
         if self.posicao - COLUNAS >= 0:
             self.posicao -= COLUNAS
 
-    def mover_para_baixo(self, ilha):
+    def mover_para_baixo(self):
         if self.posicao + COLUNAS < COLUNAS * LINHAS:
             self.posicao += COLUNAS
 
-    def mover_para_esquerda(self, ilha):
+    def mover_para_esquerda(self):
         if self.posicao % COLUNAS != 0:
             self.posicao -= 1
 
-    def mover_para_direita(self, ilha):
+    def mover_para_direita(self):
         if (self.posicao + 1) % COLUNAS != 0:
             self.posicao += 1
 
     def desenhar_personagem(self, tela, ilha):
        pygame.draw.circle(tela, VERMELHO, ilha.grafo[self.posicao][0], 20)  # passamos a chave (self.posicao -> que é o vertice onde o jogador está) e o indice 0 da lista desse vertice (onde se encontra a posição (x,y) a ser impressa
 
-    def consumir_planta(self,planta):
-        self.aumentar_vida(planta.get_cura()) #tem que passar um valor que é a cura da planta
-        planta.descricao = "Planta consumida"
+    def consumir_planta(self, planta, ilha):
+        self.aumentar_vida(planta.get_cura())  # Aumentar a vida do jogador com base na cura da planta
+        ilha.grafo[self.posicao].remove(planta)  # Remover a planta consumida da lista do vértice
+        ilha.diminui_planta(-1)  # Reduzir a quantidade de plantas na ilha
+
+    def passar_perigo(self,perigo,ilha):
+        self.diminuir_vida(perigo.get_dano())
+        ilha.grafo[self.posicao].remove(perigo)
+        ilha.diminui_perigo(-1)

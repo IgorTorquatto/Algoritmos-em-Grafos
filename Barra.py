@@ -1,6 +1,17 @@
+import time
+
 import pygame
 from constantes import *
-
+from Onca import Onca
+from Crocodilo import Crocodilo
+from Planta import Planta
+from Formiga import Formiga
+from Adaga import Adaga
+from Pistola import Pistola
+from Espada import Espada
+from AreiaMovediça import AreiaMovedica
+from GasVenenoso import GasVenenoso
+from PVenenosa import PVenenosa
 
 class Barra:
     def __init__(self,tela,ilha,jogador):
@@ -8,7 +19,7 @@ class Barra:
         self.ilha = ilha
         self.jogador = jogador
 
-    def desenhar_barra(self,tela):
+    def desenhar_barra(self,tela,jogador,ilha):
         fonte = pygame.font.Font(None,21)
 
         #Desenhar barra
@@ -32,17 +43,16 @@ class Barra:
         mensagens_ilha = [
             "Número de inimigos: " + str(self.ilha.qtd_inimigos),
             "Quantidade de plantas: "+ str(self.ilha.qtd_plantas),
-            "Quantidade de perigos: " +str(0)
+            "Quantidade de perigos: " +str(self.ilha.qtd_perigos),
+            "Quantidade armas: " +str(self.ilha.qtd_armas)
         ]
 
         #Seção de descrição do vértice
 
         mensagem_vertice = [
-            self.ilha.obter_descricao_vertice(self.jogador),
+            self.ilha.obter_descricao_vertice(jogador,ilha),
             ""
         ]
-
-
 
         #Mostrar Topo
         texto_topo = fonte.render(mensagens[0], True, BRANCO)  # Renderiza o texto "Informações"
@@ -87,7 +97,7 @@ class Barra:
 
         posicao_x_infos_ilha += 180
 
-        for i in range(0,3):
+        for i in range(0,4):
             texto = fonte.render(mensagens_ilha[i],True,BRANCO)
             tela.blit(texto,(posicao_x_infos_ilha,posicao_y_infos_ilha))
             posicao_x_infos_ilha+=200
@@ -132,6 +142,94 @@ class Barra:
                         resposta = 'N'
 
         return resposta
+
+    def interagir_jogador(self,tela,ilha,jogador):
+
+        posicao_jogador = jogador.get_posicao()
+        resposta = None
+
+        for elemento in ilha.grafo[posicao_jogador]:
+
+            if isinstance(elemento, Onca):
+                # Se encontrarmos uma instância de Onca na lista, realizamos a ação
+                resposta = self.perguntar_sim_ou_nao(tela, "Quer batalhar contra a Onça? (S/N)")
+                if resposta == "S":
+                    print("batalhou contra Onca")
+                if resposta == "N":
+                    print("Nao batalhou contra Onca")
+                    jogador.set_posicao((jogador.get_posicao() +1)) #move para o próx vértice
+
+            elif isinstance(elemento,Crocodilo):
+                # Se encontrarmos uma instância de Crocodilo na lista, realizamos a ação
+                resposta = self.perguntar_sim_ou_nao(tela, "Quer batalhar contra o Crocodilo? (S/N)")
+                if resposta == "S":
+                    print("batalhou contra Crocodilo")
+                if resposta == "N":
+                    print("Nao batalhou contra Crocodilo")
+                    jogador.set_posicao((jogador.get_posicao() + 1))  # move para o próx vértice
+
+            elif isinstance(elemento,Formiga):
+                # Se encontrarmos uma instância de Formiga na lista, realizamos a ação
+                resposta = self.perguntar_sim_ou_nao(tela, "Quer batalhar contra as Formigas? (S/N)")
+                if resposta == "S":
+                    print("batalhou contra Formigas")
+                if resposta == "N":
+                    print("Nao batalhou contra Formigas")
+                    jogador.set_posicao((jogador.get_posicao() + 1))  # move para o próx vértice
+
+            elif isinstance(elemento,Planta):
+                # Se encontrarmos uma instância de Planta na lista, realizamos a ação
+                resposta = self.perguntar_sim_ou_nao(tela, "Quer consumir uma Planta? (S/N)")
+                if resposta == "S":
+                    print("Consumiu Planta")
+                    jogador.consumir_planta(elemento,ilha)
+                if resposta == "N":
+                    print("Não consumiu planta")
+                    jogador.set_posicao((jogador.get_posicao() + 1))  # move para o próx vértice
+
+            elif isinstance(elemento,Espada):
+                # Se encontrarmos uma instância de Planta na lista, realizamos a ação
+                resposta = self.perguntar_sim_ou_nao(tela, "Quer pegar a Espada? (S/N)")
+                if resposta == "S":
+                    print("Pegou espada")
+                if resposta == "N":
+                    print("Não pegou espada")
+                    jogador.set_posicao((jogador.get_posicao() + 1))  # move para o próx vértice
+
+            elif isinstance(elemento, Adaga):
+                # Se encontrarmos uma instância de Planta na lista, realizamos a ação
+                resposta = self.perguntar_sim_ou_nao(tela, "Quer pegar a Adaga (S/N)")
+                if resposta == "S":
+                    print("Pegou adaga")
+                if resposta == "N":
+                    print("Não pegou adaga")
+                    jogador.set_posicao((jogador.get_posicao() + 1))  # move para o próx vértice
+
+            elif isinstance(elemento, Pistola):
+                # Se encontrarmos uma instância de Planta na lista, realizamos a ação
+                resposta = self.perguntar_sim_ou_nao(tela, "Quer pegar a Pistola? (S/N)")
+                if resposta == "S":
+                    print("Pegou pistola")
+                if resposta == "N":
+                    print("Não pegou pistola")
+                    jogador.set_posicao((jogador.get_posicao() + 1))  # move para o próx vértice
+
+            elif isinstance(elemento, AreiaMovedica):
+                resposta = self.perguntar_sim_ou_nao(tela,"O seu jogador sofreu dano de Areia Movediça (S para continuar)")
+                jogador.passar_perigo(elemento,ilha)
+
+            elif isinstance(elemento, GasVenenoso):
+                resposta = self.perguntar_sim_ou_nao(tela, "O seu jogador sofreu dano de Gás venenoso (S para continuar)")
+                if resposta == "S":
+                    jogador.passar_perigo(elemento,ilha)
+                    jogador.set_posicao((jogador.get_posicao() + 1))
+
+            elif isinstance(elemento, PVenenosa):
+                resposta = self.perguntar_sim_ou_nao(tela, "O seu jogador sofreu dano de Planta Venenosa (S para continuar)")
+                if resposta == "S":
+                    jogador.passar_perigo(elemento, ilha)
+                    jogador.set_posicao((jogador.get_posicao() + 1))
+
 
 
 

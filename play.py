@@ -3,7 +3,6 @@ from constantes import *
 from Ilha import Ilha
 from Jogador import Jogador
 from Barra import Barra
-from Planta import Planta
 import time
 
 def iniciar_jogo(tela):
@@ -11,6 +10,8 @@ def iniciar_jogo(tela):
     ilha = Ilha()  # Inicializa o grafo da ilha
     ilha.set_qtd_inimigos(5) #definindo quantidade de inimigos
     ilha.set_qtd_plantas(5) #definindo quantidade de plantas
+    ilha.set_qtd_armas(3) #definindo quantidade de armas
+    ilha.set_qtd_perigos(3) #defininfo quantidade de perigos na ilha
 
     pygame.mixer.music.stop()
     pygame.mixer.music.load(MUSICA_JOGO)
@@ -20,9 +21,11 @@ def iniciar_jogo(tela):
     ilha.associar_posicoes_aos_vertices() # A função associar_posicoes_aos_vertices além de associar uma posição (x,y) para cada vértice coloca essa posicao no indice 0 de cada lista de cada vértice
     ilha.construir_arestas() # A função de construir arestas além de construir as arestas adiciona cada uma na lista de arestas do Grafo onde podemos ter acesso ao vértice assim [(vertice_de_origem,vertice_de_destino)]
 
-    # Distribuir inimigos,plantas...
+    # Distribuir inimigos,plantas,armas...
     ilha.distribuir_inimigos()
     ilha.distribuir_plantas()
+    ilha.distribuir_armas()
+    ilha.distribuir_perigos()
 
     #Jogador
     jogador = Jogador(ilha)
@@ -42,13 +45,13 @@ def iniciar_jogo(tela):
             # Comandos jogador mover na ilha
             elif event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_UP:
-                    jogador.mover_para_cima(ilha)
+                    jogador.mover_para_cima()
                 elif event.key == pygame.K_DOWN:
-                    jogador.mover_para_baixo(ilha)
+                    jogador.mover_para_baixo()
                 elif event.key == pygame.K_LEFT:
-                    jogador.mover_para_esquerda(ilha)
+                    jogador.mover_para_esquerda()
                 elif event.key == pygame.K_RIGHT:
-                    jogador.mover_para_direita(ilha)
+                    jogador.mover_para_direita()
 
 
         # Limpe a tela
@@ -63,7 +66,7 @@ def iniciar_jogo(tela):
 
         # Criar barra de informações
         # começando em 500 na y
-        barra.desenhar_barra(tela)
+        barra.desenhar_barra(tela,jogador,ilha)
 
         # Atualize a tela
         pygame.display.update()
@@ -75,7 +78,7 @@ def iniciar_jogo(tela):
             rodar = False
 
         #Interagir com o jogador de acordo com que tem no vértice que ele está
-        #barra.interagir_jogador(tela,ilha)
+        barra.interagir_jogador(tela,ilha,jogador)
 
     # Encerre o Pygame
     pygame.quit()
