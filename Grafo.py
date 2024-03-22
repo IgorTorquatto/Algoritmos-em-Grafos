@@ -1,4 +1,3 @@
-import pygame
 from constantes import *
 from Onca import Onca
 from Crocodilo import Crocodilo
@@ -69,6 +68,13 @@ class Grafo:
             for linha in matriz_adjacencias:
                 print(linha)
 
+        def acessar_vertice_por_indice(self, indice):
+            for lista_vertices in self.grafo.values():
+                for vertice in lista_vertices:
+                    if vertice.indice == indice:
+                        return vertice
+            return None
+
         #Funções para o Pygame:
         def associar_posicoes_aos_vertices(self):
             posicao_vertices = []  # conjunto de posicoes (x,y) dos vértices
@@ -103,7 +109,43 @@ class Grafo:
         def distribuir_plantas(self):
             vertices_indices = list(range(1, self.qtd_vertices))
             random.shuffle(vertices_indices)
-            for i in range(min(self.qtd_plantas, len(vertices_indices))):
+            for i in range(min(self.qtd_plantas, len(vertices_indices))): #o número total de plantas distribuídas é o menor entre o número de plantas especificado e o número total de vértices disponíveis
                 vertice_index = vertices_indices[i]
                 planta = Planta()
                 self.vertices[vertice_index].objetos.append(planta)
+
+        def distribuir_inimigos(self):
+            vertices_indices = list(range(1, self.qtd_vertices))
+            random.shuffle(vertices_indices)
+
+            for i in range(min(self.qtd_inimigos, len(vertices_indices))):
+                vertice_index = vertices_indices[i]
+                inimigo = random.choice([Onca(), Crocodilo(), Formiga()])
+                while any(isinstance(objeto, Planta) for objeto in self.vertices[vertice_index].objetos): # verificamos se o vértice escolhido aleatoriamente já contém uma planta. Se sim, escolhemos um novo vértice aleatório
+                    vertice_index = random.choice(vertices_indices)
+                self.vertices[vertice_index].objetos.append(inimigo)
+
+        def distribuir_armas(self):
+            vertices_indices = list(range(1, self.qtd_vertices))
+            random.shuffle(vertices_indices)
+
+            for i in range(min(self.qtd_armas, len(vertices_indices))):
+                vertice_index = vertices_indices[i]
+                arma = random.choice([Adaga(), Pistola(), Espada()])
+                while any(isinstance(objeto, (Crocodilo, Onca, Formiga)) for objeto in
+                          self.vertices[vertice_index].objetos):
+                    vertice_index = random.choice(vertices_indices)
+                self.vertices[vertice_index].objetos.append(arma)
+
+        def distribuir_perigos(self):
+            vertices_indices = list(range(1, self.qtd_vertices))
+            random.shuffle(vertices_indices)
+
+            for i in range(min(self.qtd_perigos, len(vertices_indices))):
+                vertice_index = vertices_indices[i]
+                perigo = random.choice([AreiaMovedica(), GasVenenoso(),PVenenosa()])
+                while any(isinstance(objeto, Planta) for objeto in self.vertices[vertice_index].objetos) or \
+                        any(isinstance(objeto, (Crocodilo, Onca, Formiga)) for objeto in
+                            self.vertices[vertice_index].objetos):
+                    vertice_index = random.choice(vertices_indices)
+                self.vertices[vertice_index].objetos.append(perigo)

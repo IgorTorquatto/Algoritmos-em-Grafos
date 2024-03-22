@@ -1,4 +1,6 @@
 import  pygame
+import random
+import time
 
 #Constantes Numéricas:
 TELA_MENU_LARGURA = 1000

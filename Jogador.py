@@ -1,4 +1,3 @@
-import pygame
 from constantes import *
 from Planta import Planta
 
@@ -10,6 +9,7 @@ class Jogador:
         self.ataque = 50
         self.tesouro_capturado = 0
         self.tesouro_transportado = 0
+        self.tempo = 0
 
     def get_posicao(self):
         return self.posicao
@@ -40,36 +40,21 @@ class Jogador:
     def aumentar_dano_de_ataque(self,valor):
         self.ataque+=valor
 
-    def mover_para_cima(self):
-        vizinhos = self.ilha.grafo[self.posicao]
-        if self.posicao - COLUNAS in vizinhos:
-            self.posicao -= COLUNAS
+    def mover_jogador(self, relogio):
+        tempo_do_relogio = relogio.time
+        if tempo_do_relogio != self.tempo:
+            self.tempo = tempo_do_relogio
+            # Acessar os índices dos vizinhos do vértice atual
+            vertice_atual = self.ilha.vertices[self.posicao]
+            vizinhos_vertice_atual = self.ilha.grafo[vertice_atual] #lista com vizinhos do vértice atual
+            if vizinhos_vertice_atual:
+                proximo_vertice_indice = random.choice(vizinhos_vertice_atual).indice # Movendo de forma aleatoria
+                self.posicao = proximo_vertice_indice
 
-    def mover_para_baixo(self):
-        vizinhos = self.ilha.grafo[self.posicao]
-        if self.posicao + COLUNAS in vizinhos:
-            self.posicao += COLUNAS
 
-    def mover_para_esquerda(self):
-        vizinhos = self.ilha.grafo[self.posicao]
-        if self.posicao - 1 in vizinhos:
-            self.posicao -= 1
 
-    def mover_para_direita(self):
-        vizinhos = self.ilha.grafo[self.posicao]
-        if self.posicao + 1 in vizinhos:
-            self.posicao += 1
-
-    def desenhar_personagem(self, tela, ilha):
-        posicao_x, posicao_y = ilha.vertices[self.posicao].posicao
+    def desenhar_personagem(self, tela):
+        posicao_x, posicao_y = self.ilha.vertices[self.posicao].posicao
         pygame.draw.circle(tela, VERMELHO, (posicao_x, posicao_y), 20)
 
-    def consumir_planta(self, planta, ilha):
-        self.aumentar_vida(planta.get_cura())  # Aumentar a vida do jogador com base na cura da planta
-        ilha.grafo[self.posicao].remove(planta)  # Remover a planta consumida da lista do vértice
-        ilha.diminui_planta(-1)  # Reduzir a quantidade de plantas na ilha
 
-    def passar_perigo(self,perigo,ilha):
-        self.diminuir_vida(perigo.get_dano())
-        ilha.grafo[self.posicao].remove(perigo)
-        ilha.diminui_perigo(-1)
