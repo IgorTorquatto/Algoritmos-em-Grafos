@@ -1,5 +1,4 @@
 import time
-
 import pygame
 from constantes import *
 from Onca import Onca
@@ -34,7 +33,7 @@ class Barra:
 
         #Seção de infos
         mensagens_jogador = [
-            "Pontos de vida: "+ str(self.jogador.get_vida()),
+            "Pontos de vida: " +str(self.jogador.get_vida()),
             "Dano de ataque: " + str(self.jogador.get_ataque()),
             "Tesouro capturado: "+ str(self.jogador.get_tesouro_capturado()),
             "Tesouro transportado: "+ str(self.jogador.get_tesouro_transportado())

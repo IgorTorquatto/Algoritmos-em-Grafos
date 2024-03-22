@@ -1,35 +1,42 @@
 import pygame,sys
 from constantes import *
-from Ilha import Ilha
+from Grafo import Grafo
 from Jogador import Jogador
 from Barra import Barra
 import time
 
 def iniciar_jogo(tela):
 
-    ilha = Ilha()  # Inicializa o grafo da ilha
-    ilha.set_qtd_inimigos(5) #definindo quantidade de inimigos
-    ilha.set_qtd_plantas(5) #definindo quantidade de plantas
-    ilha.set_qtd_armas(3) #definindo quantidade de armas
-    ilha.set_qtd_perigos(3) #defininfo quantidade de perigos na ilha
+    ilha = Grafo()  # Inicializa o grafo da ilha
+    ilha.preencher_grafo()
+
+    #testes
+    #print(ilha.grafo)
+    #ilha.imprimir_indices_vertices()
+    #print(ilha.vertices[5].indice)
+
+    ilha.qtd_inimigos = 5 #definindo quantidade de inimigos
+    ilha.qtd_plantas = 5 #definindo quantidade de plantas
+    ilha.qtd_armas = 3 #definindo quantidade de armas
+    ilha.qtd_perigos = 3 #defininfo quantidade de perigos na ilha
 
     pygame.mixer.music.stop()
     pygame.mixer.music.load(MUSICA_JOGO)
     pygame.mixer.music.play(-1)
 
-    # Definir posições dos vértices e construir arestas
-    ilha.associar_posicoes_aos_vertices() # A função associar_posicoes_aos_vertices além de associar uma posição (x,y) para cada vértice coloca essa posicao no indice 0 de cada lista de cada vértice
-    ilha.construir_arestas() # A função de construir arestas além de construir as arestas adiciona cada uma na lista de arestas do Grafo onde podemos ter acesso ao vértice assim [(vertice_de_origem,vertice_de_destino)]
+    # Definir posições dos vértices (x,y) para mostrar na tela
+    ilha.associar_posicoes_aos_vertices()
 
     # Distribuir inimigos,plantas,armas...
-    ilha.distribuir_inimigos()
-    ilha.distribuir_plantas()
-    ilha.distribuir_armas()
-    ilha.distribuir_perigos()
+   # ilha.distribuir_inimigos()
+    #ilha.distribuir_plantas()
+    #print(ilha.grafo)
+   # ilha.distribuir_armas()
+   # ilha.distribuir_perigos()
 
     #Jogador
     jogador = Jogador(ilha)
-    barra = Barra(tela, ilha, jogador)  # barra para apresentar as informações dos eventos no grafo
+    #barra = Barra(tela, ilha, jogador)  # barra para apresentar as informações dos eventos no grafo
 
     #Podemos imprimir a matriz de adjacencias do grafo e suas arestas
     #ilha.imprimir_matriz_adjacencias()
@@ -66,19 +73,19 @@ def iniciar_jogo(tela):
 
         # Criar barra de informações
         # começando em 500 na y
-        barra.desenhar_barra(tela,jogador,ilha)
+       # barra.desenhar_barra(tela,jogador,ilha)
 
         # Atualize a tela
         pygame.display.update()
 
         #Condição de derrota
-        if (jogador.get_vida() == 0):
+        #if (jogador.get_vida() == 0):
             # Adicionar tela de perdeu
-            print("Perdeu")
-            rodar = False
+           # print("Perdeu")
+           # rodar = False
 
         #Interagir com o jogador de acordo com que tem no vértice que ele está
-        barra.interagir_jogador(tela,ilha,jogador)
+        #barra.interagir_jogador(tela,ilha,jogador)
 
     # Encerre o Pygame
     pygame.quit()

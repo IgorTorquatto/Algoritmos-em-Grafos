@@ -4,7 +4,8 @@ from Planta import Planta
 
 class Jogador:
     def __init__(self, ilha):
-        self.posicao = list(ilha.grafo.keys())[0] #transforma o dict de grafo em lista e pega o primeiro indice
+        self.ilha = ilha
+        self.posicao = 0  # Posição inicial do jogador é o primeiro vértice da ilha
         self.vida = 100
         self.ataque = 50
         self.tesouro_capturado = 0
@@ -40,23 +41,28 @@ class Jogador:
         self.ataque+=valor
 
     def mover_para_cima(self):
-        if self.posicao - COLUNAS >= 0:
+        vizinhos = self.ilha.grafo[self.posicao]
+        if self.posicao - COLUNAS in vizinhos:
             self.posicao -= COLUNAS
 
     def mover_para_baixo(self):
-        if self.posicao + COLUNAS < COLUNAS * LINHAS:
+        vizinhos = self.ilha.grafo[self.posicao]
+        if self.posicao + COLUNAS in vizinhos:
             self.posicao += COLUNAS
 
     def mover_para_esquerda(self):
-        if self.posicao % COLUNAS != 0:
+        vizinhos = self.ilha.grafo[self.posicao]
+        if self.posicao - 1 in vizinhos:
             self.posicao -= 1
 
     def mover_para_direita(self):
-        if (self.posicao + 1) % COLUNAS != 0:
+        vizinhos = self.ilha.grafo[self.posicao]
+        if self.posicao + 1 in vizinhos:
             self.posicao += 1
 
     def desenhar_personagem(self, tela, ilha):
-       pygame.draw.circle(tela, VERMELHO, ilha.grafo[self.posicao][0], 20)  # passamos a chave (self.posicao -> que é o vertice onde o jogador está) e o indice 0 da lista desse vertice (onde se encontra a posição (x,y) a ser impressa
+        posicao_x, posicao_y = ilha.vertices[self.posicao].posicao
+        pygame.draw.circle(tela, VERMELHO, (posicao_x, posicao_y), 20)
 
     def consumir_planta(self, planta, ilha):
         self.aumentar_vida(planta.get_cura())  # Aumentar a vida do jogador com base na cura da planta
