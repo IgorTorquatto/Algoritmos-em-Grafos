@@ -120,8 +120,9 @@ class Barra:
             descricao_vertice = fonte.render(mensagem_vertice[0][0],True,BRANCO)
             tela.blit(descricao_vertice,(20,650))
 
-    def interagir_com_objeto(self):
-        pass
+
+
+
 
 
 

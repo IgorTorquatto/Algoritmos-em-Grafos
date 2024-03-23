@@ -3,7 +3,7 @@ from constantes import *
 class Relogio:
     def __init__(self):
         self.fonte = pygame.font.SysFont(None, 30)
-        self.tempo_atual = 1  # Inicializa o tempo
+        self.tempo_atual = 0  # Inicializa o tempo
         self.tempo_limite = 3 * 25
 
     def update_time(self):

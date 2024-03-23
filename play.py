@@ -1,9 +1,13 @@
 import sys
+
+import pygame
+
 from constantes import *
 from Grafo import Grafo
 from Jogador import Jogador
 from Relogio import Relogio
 from Barra import Barra
+from Vertice import Vertice
 
 def iniciar_jogo(tela):
 
@@ -33,7 +37,7 @@ def iniciar_jogo(tela):
     barra = Barra(tela, ilha, jogador)  # barra para apresentar as informações dos eventos no grafo
 
 
-    #Imprimir listas de adjacências (  MOSTRAR ISSO NA EXPLICAÇÃO PARA O PROF)
+    #Imprimir listas de adjacências (  MOSTRAR ISSO NA EXPLICAÇÃO )
     print(ilha.grafo)
     ilha.imprimir_lista_adjacencias()
     ilha.imprimir_objetos_dos_vertices()
@@ -48,26 +52,28 @@ def iniciar_jogo(tela):
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 rodar = False
-            # Comandos jogador mover na ilha
-            #elif event.type == pygame.KEYDOWN:
-                # if event.key == pygame.K_UP:
-                 #   jogador.mover_para_cima()
-                 #elif event.key == pygame.K_DOWN:
-                    #jogador.mover_para_baixo()
-                 #elif event.key == pygame.K_LEFT:
-                 #   jogador.mover_para_esquerda()
-                 #elif event.key == pygame.K_RIGHT:
-                 #   jogador.mover_para_direita()
-
-        # Verifique se passaram 5 segundos
-        tempo_atual = pygame.time.get_ticks()
-        if (tempo_atual - tempo_anterior) >= 5000:  # 5 segundos em milissegundos
-            relogio.update_time()
-            tempo_anterior = tempo_atual
 
         # Limpe a tela
         tela.fill(AZUL_CLARO)
         tela.blit(ILHA_FUNDO, (0, -100))
+
+        if (jogador.posicao == 0):
+            fonte = pygame.font.Font(None, 36)
+            mensagem = fonte.render("Você está na praia e tem " +str(jogador.tesouro_transportado)+" de tesouro, deseja finalizar o jogo (S/N)?", True, LARANJA)
+            tela.blit(mensagem,(TELA_MENU_LARGURA // 2 - mensagem.get_width() // 2, TELA_MENU_ALTURA // 2 - mensagem.get_height() // 2))
+            pygame.display.flip()
+
+            # Espere pela resposta do usuário
+            esperando_resposta = True
+            while esperando_resposta:
+                for event in pygame.event.get():
+                    if event.type == pygame.KEYDOWN:
+                        if event.key == pygame.K_s:
+                            rodar = False
+                            esperando_resposta = False
+                        elif event.key == pygame.K_n:
+                            esperando_resposta = False
+                            break
 
         # Desenhando o relógio na tela
         relogio.draw(tela)
@@ -78,16 +84,21 @@ def iniciar_jogo(tela):
         # Personagem
         jogador.desenhar_personagem(tela)
 
-        #Descomentar essa linha para movimentos automáticos:
-        #jogador.mover_jogador(relogio)
+        #Aplicar busca em largura para ter uma lista da sequência de nós que devem ser visitados
+        vertice_atual = ilha.acessar_vertice_por_indice(jogador.posicao)
 
-        #Movimentar jogador com base em BFS:
-        indice_vertice_jogador_esta= jogador.posicao
-        vertice_jogador_esta = ilha.vertices[indice_vertice_jogador_esta]
-        pygame.time.delay(2000)
-        jogador.BFS(ilha,vertice_jogador_esta,relogio)
+        #jogador.BFS(ilha, vertice_atual)
+        #jogador.DFS(ilha,vertice_atual)
 
-        # print(ilha.grafo[vertice_jogador_esta]) teste isso tem os vizinhos do vertice
+        # Verifique se passaram 5 segundos
+        tempo_atual = pygame.time.get_ticks()
+        if (tempo_atual - tempo_anterior) >= 2000:  # 5 segundos em milissegundos
+            relogio.update_time()
+            tempo_anterior = tempo_atual
+            # Mover jogador com base na busca em largura
+            #jogador.mover_jogador_bfs(vertice_atual)
+            jogador.mover_jogador(vertice_atual, ilha)
+
 
         # Criar barra de informações
         # começando em 500 na y

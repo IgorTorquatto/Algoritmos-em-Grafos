@@ -4,6 +4,7 @@ from collections import deque
 from Relogio import Relogio
 from Grafo import Grafo
 from Vertice import Vertice
+from Barra import Barra
 
 class Jogador:
     def __init__(self, ilha):
@@ -13,7 +14,11 @@ class Jogador:
         self.ataque = 50
         self.duracao_arma_atual = 0
         self.tesouro_transportado = 0
-        self.tempo = 1
+        self.tempo = 0
+        self.visitados = [] #lista com a sequência de vértices visitados
+        self.removidos = []
+        self.fila = []
+        self.pilha= set()
 
     def aumentar_vida(self,valor):
         if self.vida + valor > 100:
@@ -26,38 +31,50 @@ class Jogador:
     def aumentar_dano_de_ataque(self,valor):
         self.ataque+=valor
 
-    '''def mover_jogador(self, relogio):
-        tempo_do_relogio = relogio.tempo_atual
-        if tempo_do_relogio != self.tempo:
-            self.tempo = tempo_do_relogio
-            # Acessar os índices dos vizinhos do vértice atual
-            vertice_atual = self.ilha.vertices[self.posicao]
-            vizinhos_vertice_atual = self.ilha.grafo[vertice_atual] #lista com vizinhos do vértice atual
-            if vizinhos_vertice_atual:
-                proximo_vertice_indice = random.choice(vizinhos_vertice_atual).indice # Movendo de forma aleatoria
-                self.posicao = proximo_vertice_indice'''
+    #Mover jogador entre todos os vértices e depois até a praia novamente pelo caminho mais curto:
+    def mover_jogador(self,vertice: Vertice , grafo: Grafo):
 
-    def BFS(self,ilha: Grafo, no: Vertice,relogio: Relogio): # Usando python annotations para definir qual tipo de dados eu vou usar dos parãmetros
+        if ( len(self.visitados) == grafo.qtd_vertices):
+            self.visitados.clear()
+            self.mover_jogador(vertice,grafo)
 
-        #Pegando tempo do relógio atual
-        tempo_do_relogio = relogio.tempo_atual
+        self.visitados.append(vertice)
+        vizinhos_vertice_atual = grafo.grafo[vertice]
 
-        #Inicialiando lista para os nós visitados e a fila
-        visitados = []  # List for visited nodes.
-        fila = []  # Initialize a queue
+        for elemento in vizinhos_vertice_atual:
+            if elemento not in self.visitados:
+                self.posicao = elemento.indice
+                return
+
+    def mover_jogador_bfs(self, vertice: Vertice):
+       vertice_removido= self.visitados.remove(vertice)
+       self.removidos.append(vertice_removido) #Adicionar na lista de removidos
+       proximo= self.visitados[0] #O proximo  vertice fica sendo o primeiro indice da lista
+       self.posicao = proximo.indice
+
+    def mover_jogador_dfs(self,vertice: Vertice):
+        for i in self.pilha:
+            print(i.indice)
+
+    def BFS(self,ilha: Grafo, no: Vertice): # Usando python annotations para definir qual tipo de dados eu vou usar dos parãmetros
 
         #Adicionando nó recebido na função na fila e na lista de visitados
-        visitados.append(no)
-        fila.append(no)
+        self.visitados.append(no)
+        self.fila.append(no)
 
         #Criando loop para visitar cada nó
-        # while len(fila) != 0 : # enquanto fila for diferente de vazio
-        m = fila.pop(0) #Remove o primeiro elemento da fila ( O primeiro vértice da fila)
-        for vizinho in ilha.grafo[m]: #Para cada vértice vizinho da lista de adjacências do vértice atual
-            if vizinho not in visitados: #Se o vizinho ainda não foi visitado
-                visitados.append(vizinho)
-                fila.append(vizinho)
-                self.posicao = vizinho.indice
+        while len(self.fila) != 0 : # enquanto fila for diferente de vazio
+            m = self.fila.pop(0) #Remove o primeiro elemento da fila ( O primeiro vértice da fila)
+            for vizinho in ilha.grafo[m]: #Para cada vértice vizinho da lista de adjacências do vértice atual
+                if vizinho not in self.visitados: #Se o vizinho ainda não foi visitado
+                    self.visitados.append(vizinho)
+                    self.fila.append(vizinho)
+
+    def DFS(self,grafo: Grafo,no: Vertice):
+        if no not in self.pilha:
+            self.pilha.add(no)
+            for vizinho in grafo.grafo[no]:
+                self.DFS(grafo,vizinho)
 
 
 

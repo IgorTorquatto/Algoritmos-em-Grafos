@@ -160,7 +160,8 @@ class Grafo:
                 descricoes = [objeto.descricao for objeto in vertice_que_o_jogador_esta.objetos]
 
                 return descricoes
-
+            elif indice_vertice_posicao_jogador ==0:
+                return ["Você está na praia , pressione espaço para encerrar o jogo"]
             else:
                 # Se a lista de objetos do vértice estiver vazia, retorna que o vértice está vazio
                 return ["Vertice sem nenhum objeto"]
