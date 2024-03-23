@@ -2,12 +2,16 @@ from constantes import *
 
 class Relogio:
     def __init__(self):
-        self.time = 0
-        self.font = pygame.font.SysFont(None, 30)
+        self.fonte = pygame.font.SysFont(None, 30)
+        self.tempo_atual = 1  # Inicializa o tempo
+        self.tempo_limite = 3 * 25
 
     def update_time(self):
-        self.time += 1
+        # Atualiza o tempo a cada 5 segundos
+        self.tempo_atual += 1
 
-    def draw(self, screen):
-        text = self.font.render(f"Tempo: {self.time}", True, VERDE)
-        screen.blit(text, (TELA_MENU_LARGURA - text.get_width() - 10, 10))
+    def draw(self, tela):
+        texto = self.fonte.render(f"Tempo: {self.tempo_atual}", True, VERDE)
+        texto2 = self.fonte.render(f"Tempo Limite: {self.tempo_limite}", True, VERMELHO)
+        tela.blit(texto, (10, 10))
+        tela.blit(texto2, (750, 10))

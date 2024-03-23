@@ -149,3 +149,18 @@ class Grafo:
                             self.vertices[vertice_index].objetos):
                     vertice_index = random.choice(vertices_indices)
                 self.vertices[vertice_index].objetos.append(perigo)
+
+        def obter_descricao_vertice(self, jogador):
+            indice_vertice_posicao_jogador = jogador.posicao
+            vertice_que_o_jogador_esta = self.vertices[indice_vertice_posicao_jogador]
+
+            #Se tiver algum objeto no vértice:
+            if vertice_que_o_jogador_esta.objetos:
+                # Se a lista de objetos do vértice não estiver vazia, retorna a descrição de cada objeto
+                descricoes = [objeto.descricao for objeto in vertice_que_o_jogador_esta.objetos]
+
+                return descricoes
+
+            else:
+                # Se a lista de objetos do vértice estiver vazia, retorna que o vértice está vazio
+                return ["Vertice sem nenhum objeto"]

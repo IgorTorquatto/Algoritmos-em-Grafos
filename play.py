@@ -30,7 +30,7 @@ def iniciar_jogo(tela):
 
     #Jogador
     jogador = Jogador(ilha)
-    #barra = Barra(tela, ilha, jogador)  # barra para apresentar as informações dos eventos no grafo
+    barra = Barra(tela, ilha, jogador)  # barra para apresentar as informações dos eventos no grafo
 
 
     #Imprimir listas de adjacências (  MOSTRAR ISSO NA EXPLICAÇÃO PARA O PROF)
@@ -42,26 +42,28 @@ def iniciar_jogo(tela):
     relogio = Relogio()
     rodar = True
     resposta = None
+    tempo_anterior = pygame.time.get_ticks()
 
     while rodar:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 rodar = False
             # Comandos jogador mover na ilha
-            elif event.type == pygame.KEYDOWN:
-                if event.key == pygame.K_UP:
-                    jogador.mover_para_cima()
-                elif event.key == pygame.K_DOWN:
-                    jogador.mover_para_baixo()
-                elif event.key == pygame.K_LEFT:
-                    jogador.mover_para_esquerda()
-                elif event.key == pygame.K_RIGHT:
-                    jogador.mover_para_direita()
+            #elif event.type == pygame.KEYDOWN:
+                # if event.key == pygame.K_UP:
+                 #   jogador.mover_para_cima()
+                 #elif event.key == pygame.K_DOWN:
+                    #jogador.mover_para_baixo()
+                 #elif event.key == pygame.K_LEFT:
+                 #   jogador.mover_para_esquerda()
+                 #elif event.key == pygame.K_RIGHT:
+                 #   jogador.mover_para_direita()
 
-
-        # Atualizando o tempo a cada 10 segundos
-        if pygame.time.get_ticks() % 5000 == 0:
-             relogio.update_time()
+        # Verifique se passaram 5 segundos
+        tempo_atual = pygame.time.get_ticks()
+        if (tempo_atual - tempo_anterior) >= 5000:  # 5 segundos em milissegundos
+            relogio.update_time()
+            tempo_anterior = tempo_atual
 
         # Limpe a tela
         tela.fill(AZUL_CLARO)
@@ -75,24 +77,29 @@ def iniciar_jogo(tela):
 
         # Personagem
         jogador.desenhar_personagem(tela)
-        jogador.mover_jogador(relogio)
+
+        #Descomentar essa linha para movimentos automáticos:
+        #jogador.mover_jogador(relogio)
+
+        #Movimentar jogador com base em BFS:
+        indice_vertice_jogador_esta= jogador.posicao
+        vertice_jogador_esta = ilha.vertices[indice_vertice_jogador_esta]
+        pygame.time.delay(2000)
+        jogador.BFS(ilha,vertice_jogador_esta,relogio)
+
+        # print(ilha.grafo[vertice_jogador_esta]) teste isso tem os vizinhos do vertice
 
         # Criar barra de informações
         # começando em 500 na y
-       # barra.desenhar_barra(tela,jogador,ilha)
+        barra.desenhar_barra(tela,jogador,ilha)
 
         # Atualize a tela
         pygame.display.update()
 
-
         #Condição de derrota
-        #if (jogador.get_vida() == 0):
-            # Adicionar tela de perdeu
-           # print("Perdeu")
-           # rodar = False
-
-        #Interagir com o jogador de acordo com que tem no vértice que ele está
-        #barra.interagir_jogador(tela,ilha,jogador)
+        if ((jogador.vida == 0) or (relogio.tempo_atual == relogio.tempo_limite)):
+            print("Perdeu")
+            rodar = False
 
     # Encerre o Pygame
     pygame.quit()
