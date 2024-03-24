@@ -5,6 +5,7 @@ from Relogio import Relogio
 from Grafo import Grafo
 from Vertice import Vertice
 from Barra import Barra
+from Tesouro import Tesouro
 
 class Jogador:
     def __init__(self, ilha):
@@ -30,6 +31,9 @@ class Jogador:
 
     def aumentar_dano_de_ataque(self,valor):
         self.ataque+=valor
+
+    def aumentar_tesouro(self,valor):
+        self.tesouro_transportado+= valor
 
     #Mover jogador entre todos os vértices e depois até a praia novamente pelo caminho mais curto:
     def mover_jogador(self,vertice: Vertice , grafo: Grafo):
@@ -116,4 +120,13 @@ class Jogador:
         posicao_x, posicao_y = self.ilha.vertices[self.posicao].posicao
         pygame.draw.circle(tela, VERMELHO, (posicao_x, posicao_y), 20)
 
+    def consumir_planta(self,planta: Planta):
+        numero_cura = planta.cura
+        self.aumentar_vida(numero_cura)
+        self.ilha.remover_planta(self.posicao,planta)
+
+    def capturar_tesouro(self,tesouro: Tesouro):
+        numero_tesouro = tesouro.valor
+        self.aumentar_tesouro(numero_tesouro)
+        self.ilha.remover_tesouro(self.posicao,tesouro)
 

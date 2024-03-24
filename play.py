@@ -7,7 +7,9 @@ from Grafo import Grafo
 from Jogador import Jogador
 from Relogio import Relogio
 from Barra import Barra
+from Planta import Planta
 from Vertice import Vertice
+from Tesouro import Tesouro
 
 def iniciar_jogo(tela):
 
@@ -18,6 +20,7 @@ def iniciar_jogo(tela):
     ilha.qtd_plantas = 5 #definindo quantidade de plantas
     ilha.qtd_armas = 3 #definindo quantidade de armas
     ilha.qtd_perigos = 3 #definindo quantidade de perigos na ilha
+    ilha.qtd_tesouros = 5 #defininfo quantidade de tesouros
 
     pygame.mixer.music.stop()
     pygame.mixer.music.load(MUSICA_JOGO)
@@ -31,6 +34,7 @@ def iniciar_jogo(tela):
     ilha.distribuir_inimigos()
     ilha.distribuir_armas()
     ilha.distribuir_perigos()
+    ilha.distribuir_tesouros()
 
     #Jogador
     jogador = Jogador(ilha)
@@ -45,35 +49,90 @@ def iniciar_jogo(tela):
 
     relogio = Relogio()
     rodar = True
-    resposta = None
     tempo_anterior = pygame.time.get_ticks()
+    fonte = pygame.font.Font(None, 25)
 
     while rodar:
+        #Sempre capturar o vertice atual que o jogador está:
+        vertice_atual = ilha.acessar_vertice_por_indice(jogador.posicao)
+
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 rodar = False
 
+            if event.type == pygame.KEYDOWN:
+
+                if event.key == pygame.K_SPACE:
+
+                    if (jogador.posicao == 0):
+
+                        mensagem = fonte.render("Você está na praia e tem " +str(jogador.tesouro_transportado)+" de tesouro, deseja finalizar o jogo (S/N)?", True, AMARELO)
+                        tela.blit(mensagem,(TELA_MENU_LARGURA // 2 - mensagem.get_width() // 2, 50))
+                        pygame.display.flip()
+
+                        # Espere pela resposta do usuário
+                        esperando_resposta = True
+                        while esperando_resposta:
+                            for event in pygame.event.get():
+                                if event.type == pygame.KEYDOWN:
+                                    if event.key == pygame.K_s:
+                                        rodar = False
+                                        esperando_resposta = False
+                                    elif event.key == pygame.K_n:
+                                        esperando_resposta = False
+                                        break
+
+                    planta = None
+                    if any(isinstance(objeto,Planta) for objeto in vertice_atual.objetos):
+                        mensagem = fonte.render("Você tem " + str(jogador.vida) + " de vida deseja consumir a planta (S/N)?", True, LARANJA)
+                        tela.blit(mensagem, (TELA_MENU_LARGURA // 2 - mensagem.get_width() // 2, 50))
+                        pygame.display.flip()
+
+                        # Espere pela resposta do usuário
+                        esperando_resposta = True
+                        while esperando_resposta:
+                            for event in pygame.event.get():
+                                if event.type == pygame.KEYDOWN:
+                                    if event.key == pygame.K_s:
+                                        for objeto in vertice_atual.objetos:
+                                            if isinstance(objeto,Planta):
+                                                planta = objeto
+                                        if planta is not None:
+                                            jogador.consumir_planta(planta)
+                                        esperando_resposta = False
+                                    elif event.key == pygame.K_n:
+                                        esperando_resposta = False
+                                        break
+
+                elif event.key == pygame.K_c:
+                    tesouro = None
+                    if any(isinstance(objeto, Tesouro) for objeto in vertice_atual.objetos):
+                        mensagem = fonte.render(
+                            "Você tem " + str(jogador.tesouro_transportado) + " de tesouro deseja capturar o tesouro desse vértice (S/N)?", True, LARANJA)
+                        tela.blit(mensagem, (TELA_MENU_LARGURA // 2 - mensagem.get_width() // 2, 50))
+                        pygame.display.flip()
+
+                        # Espere pela resposta do usuário
+                        esperando_resposta = True
+                        while esperando_resposta:
+                            for event in pygame.event.get():
+                                if event.type == pygame.KEYDOWN:
+                                    if event.key == pygame.K_s:
+                                        for objeto in vertice_atual.objetos:
+                                            if isinstance(objeto, Tesouro):
+                                                tesouro = objeto
+                                        if tesouro is not None:
+                                            jogador.capturar_tesouro(tesouro)
+                                        esperando_resposta = False
+                                    elif event.key == pygame.K_n:
+                                        esperando_resposta = False
+                                        break
+
+
+
         # Limpe a tela
         tela.fill(AZUL_CLARO)
         tela.blit(ILHA_FUNDO, (0, -100))
-
-        if (jogador.posicao == 0):
-            fonte = pygame.font.Font(None, 36)
-            mensagem = fonte.render("Você está na praia e tem " +str(jogador.tesouro_transportado)+" de tesouro, deseja finalizar o jogo (S/N)?", True, LARANJA)
-            tela.blit(mensagem,(TELA_MENU_LARGURA // 2 - mensagem.get_width() // 2, TELA_MENU_ALTURA // 2 - mensagem.get_height() // 2))
-            pygame.display.flip()
-
-            # Espere pela resposta do usuário
-            esperando_resposta = True
-            while esperando_resposta:
-                for event in pygame.event.get():
-                    if event.type == pygame.KEYDOWN:
-                        if event.key == pygame.K_s:
-                            rodar = False
-                            esperando_resposta = False
-                        elif event.key == pygame.K_n:
-                            esperando_resposta = False
-                            break
 
         # Desenhando o relógio na tela
         relogio.draw(tela)
@@ -85,8 +144,6 @@ def iniciar_jogo(tela):
         jogador.desenhar_personagem(tela)
 
         #Aplicar busca em largura para ter uma lista da sequência de nós que devem ser visitados
-        vertice_atual = ilha.acessar_vertice_por_indice(jogador.posicao)
-
         #jogador.BFS(ilha, vertice_atual)
         #jogador.DFS(ilha,vertice_atual)
 

@@ -10,6 +10,7 @@ from AreiaMovediça import AreiaMovedica
 from GasVenenoso import GasVenenoso
 from PVenenosa import PVenenosa
 from Vertice import Vertice
+from Tesouro import Tesouro
 import random
 
 
@@ -22,6 +23,7 @@ class Grafo:
             self.qtd_plantas = 0
             self.qtd_armas = 0
             self.qtd_perigos = 0
+            self.qtd_tesouros = 5
             self.grafo = {self.vertices[i]: [] for i in range(self.qtd_vertices)} # Cria o grafo utilizando as instâncias de vértices, colocando em cada chave um vértice e criando uma lista para cada chave/vértice
             self.preencher_grafo()
 
@@ -150,6 +152,18 @@ class Grafo:
                     vertice_index = random.choice(vertices_indices)
                 self.vertices[vertice_index].objetos.append(perigo)
 
+        def distribuir_tesouros(self):
+            vertices_indices = list(range(1, self.qtd_vertices))
+            random.shuffle(vertices_indices)
+
+            for i in range(min(self.qtd_tesouros, len(vertices_indices))):
+                vertice_index = vertices_indices[i]
+                tesouro = Tesouro()
+                while any(isinstance(objeto, (Crocodilo, Onca, Formiga)) for objeto in self.vertices[vertice_index].objetos):  # verificamos se o vértice escolhido aleatoriamente já contém um inimigo. Se sim, escolhemos um novo vértice aleatório
+                    vertice_index = random.choice(vertices_indices)
+                self.vertices[vertice_index].objetos.append(tesouro)
+
+
         def obter_descricao_vertice(self, jogador):
             indice_vertice_posicao_jogador = jogador.posicao
             vertice_que_o_jogador_esta = self.vertices[indice_vertice_posicao_jogador]
@@ -165,3 +179,21 @@ class Grafo:
             else:
                 # Se a lista de objetos do vértice estiver vazia, retorna que o vértice está vazio
                 return ["Vertice sem nenhum objeto"]
+
+        def remover_planta(self,posicao,planta:Planta):
+            vertice_que_o_jogador_esta = self.acessar_vertice_por_indice(posicao)
+
+            for elemento in vertice_que_o_jogador_esta.objetos:
+                if isinstance(elemento,Planta):
+                    vertice_que_o_jogador_esta.objetos.remove(elemento)
+                    print("planta removida")
+                    print(vertice_que_o_jogador_esta.objetos)
+
+        def remover_tesouro(self,posicao,tesouro : Tesouro):
+            vertice_que_o_jogador_esta = self.acessar_vertice_por_indice(posicao)
+
+            for elemento in vertice_que_o_jogador_esta.objetos:
+                if isinstance(elemento,Tesouro):
+                    vertice_que_o_jogador_esta.objetos.remove(elemento)
+                    print("Tesouro removido")
+                    print(vertice_que_o_jogador_esta.objetos)
