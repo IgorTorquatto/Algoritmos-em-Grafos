@@ -209,3 +209,13 @@ class Grafo:
                     print(elemento.descricao+"removido")
                     print(vertice_que_o_jogador_esta.objetos)
             self.qtd_perigos-=1
+
+        def remover_arma(self,posicao,arma):
+            vertice_que_o_jogador_esta = self.acessar_vertice_por_indice(posicao)
+
+            for elemento in vertice_que_o_jogador_esta.objetos:
+                if isinstance(elemento, (Pistola, Adaga, Espada)):
+                    vertice_que_o_jogador_esta.objetos.remove(elemento)
+                    print(elemento.descricao + "removido")
+                    print(vertice_que_o_jogador_esta.objetos)
+            self.qtd_armas -= 1

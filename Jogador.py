@@ -6,13 +6,16 @@ from Grafo import Grafo
 from Vertice import Vertice
 from Barra import Barra
 from Tesouro import Tesouro
-
+from Pistola import Pistola
+from Adaga import Adaga
+from Espada import Espada
 class Jogador:
     def __init__(self, ilha):
         self.ilha = ilha
         self.posicao = 0  # Posição inicial do jogador é o primeiro vértice da ilha
         self.vida = 100
         self.ataque = 50
+        self.nome_arma = "Nenhum"
         self.duracao_arma_atual = 0
         self.tesouro_transportado = 0
         self.tempo = 0
@@ -38,7 +41,7 @@ class Jogador:
     #Mover jogador entre todos os vértices e depois até a praia novamente pelo caminho mais curto:
     def mover_jogador(self,vertice: Vertice , grafo: Grafo):
 
-        if ( len(self.visitados) == grafo.qtd_vertices):
+        if (len(self.visitados) == grafo.qtd_vertices): # Quando chega no último vértice limpa a lista de visitados e começa a mover o jogador novamente a partir do último vértice
             self.visitados.clear()
             self.mover_jogador(vertice,grafo)
 
@@ -56,9 +59,6 @@ class Jogador:
        proximo= self.visitados[0] #O proximo  vertice fica sendo o primeiro indice da lista
        self.posicao = proximo.indice
 
-    def mover_jogador_dfs(self,vertice: Vertice):
-        for i in self.pilha:
-            print(i.indice)
 
     def BFS(self,ilha: Grafo, no: Vertice): # Usando python annotations para definir qual tipo de dados eu vou usar dos parãmetros
 
@@ -126,12 +126,44 @@ class Jogador:
         self.ilha.remover_planta(self.posicao,planta)
 
     def capturar_tesouro(self,tesouro: Tesouro):
-        numero_tesouro = tesouro.valor
-        self.aumentar_tesouro(numero_tesouro)
-        self.ilha.remover_tesouro(self.posicao,tesouro)
+
+        # O jogador captura a quantidade de tesouro baseado no seu percentual de vida atual:
+
+        numero_tesouro_total = tesouro.valor  # Valor do tesouro total
+        quantidade_vida_jogador = self.vida  # Valor da vida atual do jogador
+        percentual_vida_jogador = quantidade_vida_jogador / 100  # Calcula o percentual de vida do jogador com base na vida máxima que é 100
+
+        # Calcula o número de tesouro capturado baseado no percentual de vida do jogador
+        numero_tesouro_capturado = numero_tesouro_total * percentual_vida_jogador
+
+        self.aumentar_tesouro(numero_tesouro_capturado)
+        self.ilha.remover_tesouro(self.posicao, tesouro)
 
     def sofrer_dano_perigo(self,perigo):
+
+        #Após sofrer dano por um perigo a quantidade de tesouro deve ser atualizada
+        #Exemplo: caso possua 70 pontos de vida e já esteja voltado à praia, mas perde 10 pontos de vida, então retornará com 60% do tesouro à praia
+        #Ou seja essa função deve atualizar o tesouro transportado após sofrer dano
+
+        numero_tesouro_antes_dano = self.tesouro_transportado
         numero_dano = perigo.dano
-        self.diminuir_vida(numero_dano)
+        self.diminuir_vida(numero_dano) # Reduz a vida
+
+        vida_apos_dano = self.vida
+        percentual_vida_apos_dano = vida_apos_dano / 100
+
+        #Atualizar novo numero do tesouro transportado
+        numero_tesouro_atualizado = numero_tesouro_antes_dano * percentual_vida_apos_dano
+
+        self.tesouro_transportado = numero_tesouro_atualizado
+        print(f"Você tinha {numero_tesouro_antes_dano} de tesouro  e sofreu {numero_dano}  de dano logo seu novo numero de tesouro será {numero_tesouro_atualizado} ")
         self.ilha.remover_perigo(self.posicao,perigo)
 
+    def equipar_arma(self,arma):
+
+        dano_arma = arma.dano
+        self.ataque+= dano_arma
+        self.duracao_arma_atual = arma.duracao
+        self.nome_arma = arma.nome
+
+        self.ilha.remover_arma(self.posicao,arma)

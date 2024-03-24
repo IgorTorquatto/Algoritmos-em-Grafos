@@ -35,8 +35,8 @@ class Barra:
         mensagens_jogador = [
             "Pontos de vida: " +str(self.jogador.vida),
             "Dano de ataque: " + str(self.jogador.ataque),
-            "Duracao Arma: "+ str(self.jogador.duracao_arma_atual),
-            "Tesouro transportado: "+ str(self.jogador.tesouro_transportado)
+            "Arma[Duracao]: "+ str(self.jogador.nome_arma)+"["+str(self.jogador.duracao_arma_atual)+"]",
+            "Tesouro: "+ str(self.jogador.tesouro_transportado)
         ]
 
         mensagens_ilha = [
@@ -82,9 +82,17 @@ class Barra:
             posicao_x_infos_jogador += 180
 
         for i in range(1,4):
-            texto = fonte.render(mensagens_jogador[i],True,BRANCO)
-            tela.blit(texto,(posicao_x_infos_jogador,posicao_y_infos_jogador))
-            posicao_x_infos_jogador+=180
+            if(i == 2):
+                texto = fonte.render(mensagens_jogador[i], True, BRANCO)
+                tela.blit(texto, (posicao_x_infos_jogador, posicao_y_infos_jogador))
+                posicao_x_infos_jogador += 250
+            elif(i == 3):
+                texto = fonte.render(mensagens_jogador[i], True, AMARELO)
+                tela.blit(texto, (posicao_x_infos_jogador, posicao_y_infos_jogador))
+            else:
+                texto = fonte.render(mensagens_jogador[i],True,BRANCO)
+                tela.blit(texto,(posicao_x_infos_jogador,posicao_y_infos_jogador))
+                posicao_x_infos_jogador+=180
 
         #Mostrar Seção de infos da ilha:
 

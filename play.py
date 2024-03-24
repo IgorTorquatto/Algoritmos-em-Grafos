@@ -13,6 +13,9 @@ from Tesouro import Tesouro
 from AreiaMovediça import AreiaMovedica
 from PVenenosa import  PVenenosa
 from GasVenenoso import GasVenenoso
+from Adaga import Adaga
+from Espada import Espada
+from Pistola import Pistola
 
 def iniciar_jogo(tela):
 
@@ -133,6 +136,79 @@ def iniciar_jogo(tela):
                                         esperando_resposta = False
                                         break
 
+                elif event.key == pygame.K_a:
+                    adaga = None
+                    if any(isinstance(objeto, Adaga) for objeto in vertice_atual.objetos):
+                        mensagem = fonte.render("Você tem " + str(jogador.ataque) + " de dano de ataque atual deseja aumentar (S/N)?",
+                            True, AMARELO)
+                        tela.blit(mensagem, (TELA_MENU_LARGURA // 2 - mensagem.get_width() // 2, 765))
+                        pygame.display.flip()
+
+                        # Espere pela resposta do usuário
+                        esperando_resposta = True
+                        while esperando_resposta:
+                            for event in pygame.event.get():
+                                if event.type == pygame.KEYDOWN:
+                                    if event.key == pygame.K_s:
+                                        for objeto in vertice_atual.objetos:
+                                            if isinstance(objeto, Adaga):
+                                                adaga = objeto
+                                        if adaga is not None:
+                                            jogador.equipar_arma(adaga)
+                                        esperando_resposta = False
+                                    elif event.key == pygame.K_n:
+                                        esperando_resposta = False
+                                        break
+
+                elif event.key == pygame.K_e:
+                    espada = None
+                    if any(isinstance(objeto, Espada) for objeto in vertice_atual.objetos):
+                        mensagem = fonte.render("Você tem " + str(jogador.ataque) + " de dano de ataque atual deseja aumentar (S/N)?",
+                            True, AMARELO)
+                        tela.blit(mensagem, (TELA_MENU_LARGURA // 2 - mensagem.get_width() // 2, 765))
+                        pygame.display.flip()
+
+                        # Espere pela resposta do usuário
+                        esperando_resposta = True
+                        while esperando_resposta:
+                            for event in pygame.event.get():
+                                if event.type == pygame.KEYDOWN:
+                                    if event.key == pygame.K_s:
+                                        for objeto in vertice_atual.objetos:
+                                            if isinstance(objeto, Espada):
+                                                espada = objeto
+                                        if espada is not None:
+                                            jogador.equipar_arma(espada)
+                                        esperando_resposta = False
+                                    elif event.key == pygame.K_n:
+                                        esperando_resposta = False
+                                        break
+
+                elif event.key == pygame.K_p:
+                    pistola = None
+                    if any(isinstance(objeto, Pistola) for objeto in vertice_atual.objetos):
+                        mensagem = fonte.render("Você tem " + str(jogador.ataque) + " de dano de ataque atual deseja aumentar (S/N)?",
+                            True, AMARELO)
+                        tela.blit(mensagem, (TELA_MENU_LARGURA // 2 - mensagem.get_width() // 2, 765))
+                        pygame.display.flip()
+
+                        # Espere pela resposta do usuário
+                        esperando_resposta = True
+                        while esperando_resposta:
+                            for event in pygame.event.get():
+                                if event.type == pygame.KEYDOWN:
+                                    if event.key == pygame.K_s:
+                                        for objeto in vertice_atual.objetos:
+                                            if isinstance(objeto, Pistola):
+                                                pistola = objeto
+                                        if pistola is not None:
+                                            jogador.equipar_arma(pistola)
+                                        esperando_resposta = False
+                                    elif event.key == pygame.K_n:
+                                        esperando_resposta = False
+                                        break
+
+
 
 
         # Limpe a tela
@@ -154,11 +230,13 @@ def iniciar_jogo(tela):
 
         # Verifique se passaram 5 segundos
         tempo_atual = pygame.time.get_ticks()
-        if (tempo_atual - tempo_anterior) >= 5000:  # 5 segundos em milissegundos
+        if (tempo_atual - tempo_anterior) >= 8000:  # 5 segundos em milissegundos
             relogio.update_time()
             tempo_anterior = tempo_atual
             # Mover jogador com base na busca em largura
             #jogador.mover_jogador_bfs(vertice_atual)
+
+            #Move o jogador por todos os vértices e depois escolhe o caminho mais curto para voltar para a praia
             jogador.mover_jogador(vertice_atual, ilha)
 
 
