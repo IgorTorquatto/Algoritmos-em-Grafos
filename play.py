@@ -10,6 +10,9 @@ from Barra import Barra
 from Planta import Planta
 from Vertice import Vertice
 from Tesouro import Tesouro
+from AreiaMovediça import AreiaMovedica
+from PVenenosa import  PVenenosa
+from GasVenenoso import GasVenenoso
 
 def iniciar_jogo(tela):
 
@@ -43,9 +46,10 @@ def iniciar_jogo(tela):
 
     #Imprimir listas de adjacências (  MOSTRAR ISSO NA EXPLICAÇÃO )
     print(ilha.grafo)
+    ilha.imprimir_matriz_adjacencias()
     ilha.imprimir_lista_adjacencias()
     ilha.imprimir_objetos_dos_vertices()
-    #ilha.imprimir_matriz_adjacencias()
+
 
     relogio = Relogio()
     rodar = True
@@ -67,7 +71,7 @@ def iniciar_jogo(tela):
                     if (jogador.posicao == 0):
 
                         mensagem = fonte.render("Você está na praia e tem " +str(jogador.tesouro_transportado)+" de tesouro, deseja finalizar o jogo (S/N)?", True, AMARELO)
-                        tela.blit(mensagem,(TELA_MENU_LARGURA // 2 - mensagem.get_width() // 2, 50))
+                        tela.blit(mensagem,(TELA_MENU_LARGURA // 2 - mensagem.get_width() // 2, 765))
                         pygame.display.flip()
 
                         # Espere pela resposta do usuário
@@ -76,6 +80,7 @@ def iniciar_jogo(tela):
                             for event in pygame.event.get():
                                 if event.type == pygame.KEYDOWN:
                                     if event.key == pygame.K_s:
+                                        print("Você terminou o jogo com "+ str(jogador.tesouro_transportado)+" de tesouro")
                                         rodar = False
                                         esperando_resposta = False
                                     elif event.key == pygame.K_n:
@@ -84,8 +89,8 @@ def iniciar_jogo(tela):
 
                     planta = None
                     if any(isinstance(objeto,Planta) for objeto in vertice_atual.objetos):
-                        mensagem = fonte.render("Você tem " + str(jogador.vida) + " de vida deseja consumir a planta (S/N)?", True, LARANJA)
-                        tela.blit(mensagem, (TELA_MENU_LARGURA // 2 - mensagem.get_width() // 2, 50))
+                        mensagem = fonte.render("Você tem " + str(jogador.vida) + " de vida deseja consumir a planta (S/N)?", True, AMARELO)
+                        tela.blit(mensagem, (TELA_MENU_LARGURA // 2 - mensagem.get_width() // 2, 765))
                         pygame.display.flip()
 
                         # Espere pela resposta do usuário
@@ -108,8 +113,8 @@ def iniciar_jogo(tela):
                     tesouro = None
                     if any(isinstance(objeto, Tesouro) for objeto in vertice_atual.objetos):
                         mensagem = fonte.render(
-                            "Você tem " + str(jogador.tesouro_transportado) + " de tesouro deseja capturar o tesouro desse vértice (S/N)?", True, LARANJA)
-                        tela.blit(mensagem, (TELA_MENU_LARGURA // 2 - mensagem.get_width() // 2, 50))
+                            "Você tem " + str(jogador.tesouro_transportado) + " de tesouro deseja capturar o tesouro desse vértice (S/N)?", True, AMARELO)
+                        tela.blit(mensagem, (TELA_MENU_LARGURA // 2 - mensagem.get_width() // 2, 765))
                         pygame.display.flip()
 
                         # Espere pela resposta do usuário
@@ -149,7 +154,7 @@ def iniciar_jogo(tela):
 
         # Verifique se passaram 5 segundos
         tempo_atual = pygame.time.get_ticks()
-        if (tempo_atual - tempo_anterior) >= 2000:  # 5 segundos em milissegundos
+        if (tempo_atual - tempo_anterior) >= 5000:  # 5 segundos em milissegundos
             relogio.update_time()
             tempo_anterior = tempo_atual
             # Mover jogador com base na busca em largura
@@ -166,8 +171,85 @@ def iniciar_jogo(tela):
 
         #Condição de derrota
         if ((jogador.vida == 0) or (relogio.tempo_atual == relogio.tempo_limite)):
-            print("Perdeu")
+            if(jogador.vida == 0):
+                 print("Perdeu porque a vida do jogador chegou em 0")
+            elif(relogio.tempo_atual == relogio.tempo_limite):
+                print("Perdeu porque o tempo expirou")
             rodar = False
+
+        for objeto in vertice_atual.objetos:
+
+            gasVenenoso = None
+            if isinstance(objeto,GasVenenoso):
+
+                mensagem = fonte.render("Esse vértice possui um perigo seu jogador sofrerá o dano se for a primeira passagem (Pressione S para continuar)",True, AMARELO)
+                tela.blit(mensagem, (TELA_MENU_LARGURA // 2 - mensagem.get_width() // 2, 765))
+                pygame.display.flip()
+
+                # Espere pela resposta do usuário
+                esperando_resposta = True
+                while esperando_resposta:
+                    for event in pygame.event.get():
+                        if event.type == pygame.KEYDOWN:
+                            if event.key == pygame.K_s:
+                                for objeto in vertice_atual.objetos:
+                                    if isinstance(objeto, GasVenenoso):
+                                        gasVenenoso = objeto
+                                if gasVenenoso is not None:
+                                    jogador.sofrer_dano_perigo(gasVenenoso)
+                                esperando_resposta = False
+                            elif event.key == pygame.K_UNKNOWN:
+                                esperando_resposta = False
+                                break
+
+            pVenenosa = None
+            if isinstance(objeto,PVenenosa):
+
+
+                mensagem = fonte.render( "Esse vértice possui um perigo seu jogador sofrerá o dano se for a primeira passagem (Pressione S para continuar)",  True, AMARELO)
+                tela.blit(mensagem, (TELA_MENU_LARGURA // 2 - mensagem.get_width() // 2, 765))
+                pygame.display.flip()
+
+                # Espere pela resposta do usuário
+                esperando_resposta = True
+                while esperando_resposta:
+                    for event in pygame.event.get():
+                        if event.type == pygame.KEYDOWN:
+                            if event.key == pygame.K_s:
+                                for objeto in vertice_atual.objetos:
+                                    if isinstance(objeto, PVenenosa):
+                                        pVenenosa = objeto
+                                if pVenenosa is not None:
+                                    jogador.sofrer_dano_perigo(pVenenosa)
+                                esperando_resposta = False
+                            elif event.key == pygame.K_UNKNOWN:
+                                esperando_resposta = False
+                                break
+
+            areiaMovedica = None
+            if isinstance(objeto,AreiaMovedica):
+
+
+                mensagem = fonte.render("Esse vértice possui um perigo seu jogador sofrerá o dano se for a primeira passagem (Pressione S para continuar)",True, AMARELO)
+                tela.blit(mensagem, (TELA_MENU_LARGURA // 2 - mensagem.get_width() // 2, 765))
+                pygame.display.flip()
+
+                # Espere pela resposta do usuário
+                esperando_resposta = True
+                while esperando_resposta:
+                    for event in pygame.event.get():
+                        if event.type == pygame.KEYDOWN:
+                            if event.key == pygame.K_s:
+                                for objeto in vertice_atual.objetos:
+                                    if isinstance(objeto, AreiaMovedica):
+                                        areiaMovedica = objeto
+                                if areiaMovedica is not None:
+                                    jogador.sofrer_dano_perigo(areiaMovedica)
+                                esperando_resposta = False
+                            elif event.key == pygame.K_UNKNOWN:
+                                esperando_resposta = False
+                                break
+
 
     # Encerre o Pygame
     pygame.quit()

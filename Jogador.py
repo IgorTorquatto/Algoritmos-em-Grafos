@@ -130,3 +130,8 @@ class Jogador:
         self.aumentar_tesouro(numero_tesouro)
         self.ilha.remover_tesouro(self.posicao,tesouro)
 
+    def sofrer_dano_perigo(self,perigo):
+        numero_dano = perigo.dano
+        self.diminuir_vida(numero_dano)
+        self.ilha.remover_perigo(self.posicao,perigo)
+

@@ -188,6 +188,7 @@ class Grafo:
                     vertice_que_o_jogador_esta.objetos.remove(elemento)
                     print("planta removida")
                     print(vertice_que_o_jogador_esta.objetos)
+            self.qtd_plantas-=1
 
         def remover_tesouro(self,posicao,tesouro : Tesouro):
             vertice_que_o_jogador_esta = self.acessar_vertice_por_indice(posicao)
@@ -197,3 +198,14 @@ class Grafo:
                     vertice_que_o_jogador_esta.objetos.remove(elemento)
                     print("Tesouro removido")
                     print(vertice_que_o_jogador_esta.objetos)
+            self.qtd_tesouros-=1
+
+        def remover_perigo(self,posicao,perigo):
+            vertice_que_o_jogador_esta = self.acessar_vertice_por_indice(posicao)
+
+            for elemento in vertice_que_o_jogador_esta.objetos:
+                if isinstance(elemento, (GasVenenoso,PVenenosa,AreiaMovedica)):
+                    vertice_que_o_jogador_esta.objetos.remove(elemento)
+                    print(elemento.descricao+"removido")
+                    print(vertice_que_o_jogador_esta.objetos)
+            self.qtd_perigos-=1
