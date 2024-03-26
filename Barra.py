@@ -31,12 +31,15 @@ class Barra:
             "Descrição do Vértice"
         ]
 
+        tesouro_duas_casas_decimais = round(self.jogador.tesouro_transportado,2)
+        tesouro_string = str(tesouro_duas_casas_decimais)
+
         #Seção de infos
         mensagens_jogador = [
             "Pontos de vida: " +str(self.jogador.vida),
             "Dano de ataque: " + str(self.jogador.ataque),
             "Arma[Duracao]: "+ str(self.jogador.nome_arma)+"["+str(self.jogador.duracao_arma_atual)+"]",
-            "Tesouro: "+ str(self.jogador.tesouro_transportado)
+            "Tesouro: "+ tesouro_string
         ]
 
         mensagens_ilha = [
