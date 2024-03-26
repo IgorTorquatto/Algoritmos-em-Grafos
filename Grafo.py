@@ -232,10 +232,10 @@ class Grafo:
                 posicao_posterior = posicao +1
                 vertice_da_posicao_posterior = self.acessar_vertice_por_indice(posicao_posterior)
                 vertice_da_posicao_posterior.objetos.append(criatura_removida)
-                print("Criatura " + criatura.nome+ " movida de "+str(vertice_que_a_criatura_esta.indice)+"para "+str(vertice_da_posicao_posterior.indice))
+                print("Criatura " + criatura.nome+ " movida de vertice-indice"+str(vertice_que_a_criatura_esta.indice)+"para vertice-indice"+str(vertice_da_posicao_posterior.indice))
             else:
                 #Adicionar criatura  no vértice anterior
                 posicao_anterior = posicao - 1
                 vertice_da_posicao_anterior = self.acessar_vertice_por_indice(posicao_anterior)
                 vertice_da_posicao_anterior.objetos.append(criatura_removida)
-                print("Criatura " + criatura.nome + " movida de " + str(vertice_que_a_criatura_esta.indice) + "para " + str(vertice_da_posicao_anterior.indice))
+                print("Criatura " + criatura.nome + " movida de vertice-indice" + str(vertice_que_a_criatura_esta.indice) + " para vertice-indice" + str(vertice_da_posicao_anterior.indice))

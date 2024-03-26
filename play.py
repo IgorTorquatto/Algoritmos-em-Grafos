@@ -379,8 +379,9 @@ def iniciar_jogo(tela):
 
                             if event.key == pygame.K_s:
                                 if inimigo is not None:
-                                   # jogador.batalhar(inimigo)
-                                    pass
+                                    vertice_que_o_jogador_esta = ilha.acessar_vertice_por_indice(jogador.posicao)
+                                    turnos = 3
+                                    jogador.batalhar(inimigo,tela,turnos,vertice_que_o_jogador_esta)
                                 esperando_resposta = False
 
 
@@ -395,7 +396,7 @@ def iniciar_jogo(tela):
                                     pygame.draw.rect(tela, PRETO, (0, 765, TELA_MENU_LARGURA, 500))
 
                                     mensagem = fonte.render(
-                                        "Você sofreu "+str(inimigo.ataque)+" de dano do "+inimigo.nome+" (S para continuar)", True,
+                                        "Você fugiu e sofreu "+str(inimigo.ataque)+" de dano de "+inimigo.nome+" (S para continuar)", True,
                                         AMARELO)
                                     tela.blit(mensagem, (TELA_MENU_LARGURA // 2 - mensagem.get_width() // 2, 765))
                                     pygame.display.flip()

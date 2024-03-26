@@ -172,3 +172,91 @@ class Jogador:
         self.nome_arma = arma.nome
 
         self.ilha.remover_arma(self.posicao,arma)
+
+    def batalhar(self,inimigo,tela,turnos,vertice_jogador):
+
+        turnos_duelo = turnos
+        vertice_que_o_jogador_esta = vertice_jogador
+        print("O duelo irá começar")
+        fonte = pygame.font.Font(None, 25)
+
+        #Imprimir que o duelo vai começar
+        print("O duelo está acontecendo no turno: "+ str(turnos_duelo))
+
+
+        pygame.draw.rect(tela, PRETO, (0, 765, TELA_MENU_LARGURA, 500))
+        mensagem = fonte.render("Duelo[Turnos:"+str(turnos_duelo)+"] vida-jogador["+str(self.vida)+"] vida-criatura["+str(inimigo.vida)+"] vez do jogador (S-> continuar)", True,AMARELO)
+        tela.blit(mensagem, (TELA_MENU_LARGURA // 2 - mensagem.get_width() // 2, 765))
+        pygame.display.flip()
+
+
+        esperando_resposta = True
+        while esperando_resposta:
+            for event in pygame.event.get():
+                if event.type == pygame.KEYDOWN:
+                    if event.key == pygame.K_s:
+                            #Vez do jogador:
+                            inimigo.vida= inimigo.vida - self.ataque
+
+                            #Verifica se a criatura morreu:
+                            if(inimigo.vida <= 0 ):
+                                print("Você matou criatura morreu")
+                                vertice_que_o_jogador_esta.objetos.remove(inimigo)
+                                return
+
+                            turnos_duelo = turnos_duelo -1
+                            esperando_resposta = False
+
+
+        print("O duelo está acontecendo no turno: " + str(turnos_duelo))
+        pygame.draw.rect(tela, PRETO, (0, 765, TELA_MENU_LARGURA, 500))
+        mensagem = fonte.render(
+            "Duelo[Turnos:" + str(turnos_duelo) + "] vida-jogador[" + str(self.vida) + "] vida-criatura[" + str(
+                inimigo.vida) + "] vez da criatura (S-> continuar)", True, AMARELO)
+        tela.blit(mensagem, (TELA_MENU_LARGURA // 2 - mensagem.get_width() // 2, 765))
+        pygame.display.flip()
+
+        esperando_resposta = True
+        while esperando_resposta:
+            for event in pygame.event.get():
+                if event.type == pygame.KEYDOWN:
+                    if event.key == pygame.K_s:
+                        # Vez da Criatura:
+                        self.vida = self.vida - inimigo.ataque
+
+                        # Verifica se o jogador morreu:
+                        if (self.vida <= 0):
+                            print("Você morreu no duelo conta"+inimigo.nome)
+                            return
+
+                        turnos_duelo = turnos_duelo - 1
+                        esperando_resposta = False
+
+        print("O duelo está acontecendo no turno: " + str(turnos_duelo))
+        pygame.draw.rect(tela, PRETO, (0, 765, TELA_MENU_LARGURA, 500))
+        mensagem = fonte.render(
+            "Duelo[Turnos:" + str(turnos_duelo) + "] vida-jogador[" + str(self.vida) + "] vida-criatura[" + str(
+                inimigo.vida) + "] vez do jogador (S-> continuar)", True, AMARELO)
+        tela.blit(mensagem, (TELA_MENU_LARGURA // 2 - mensagem.get_width() // 2, 765))
+        pygame.display.flip()
+
+        esperando_resposta = True
+        while esperando_resposta:
+            for event in pygame.event.get():
+                if event.type == pygame.KEYDOWN:
+                    if event.key == pygame.K_s:
+                        # Vez do jogador:
+                        inimigo.vida = inimigo.vida - self.ataque
+
+                        # Verifica se a criatura morreu:
+                        if (inimigo.vida <= 0):
+                            print("Você matou criatura morreu")
+                            vertice_que_o_jogador_esta.objetos.remove(inimigo)
+                            return
+
+                        turnos_duelo = turnos_duelo - 1
+                        esperando_resposta = False
+
+        print("O duelo chegou no turno: " + str(turnos_duelo))
+        if(turnos_duelo == 0):
+            return
