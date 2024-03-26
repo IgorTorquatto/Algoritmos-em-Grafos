@@ -16,6 +16,9 @@ from GasVenenoso import GasVenenoso
 from Adaga import Adaga
 from Espada import Espada
 from Pistola import Pistola
+from Onca import Onca
+from Formiga import Formiga
+from Crocodilo import Crocodilo
 
 def iniciar_jogo(tela):
 
@@ -139,7 +142,7 @@ def iniciar_jogo(tela):
                 elif event.key == pygame.K_a:
                     adaga = None
                     if any(isinstance(objeto, Adaga) for objeto in vertice_atual.objetos):
-                        mensagem = fonte.render("Você tem " + str(jogador.ataque) + " de dano de ataque atual deseja aumentar (S/N)?",
+                        mensagem = fonte.render("Você tem " + str(jogador.ataque) + " de dano de ataque atual deseja alterar (S/N)?",
                             True, AMARELO)
                         tela.blit(mensagem, (TELA_MENU_LARGURA // 2 - mensagem.get_width() // 2, 765))
                         pygame.display.flip()
@@ -163,7 +166,7 @@ def iniciar_jogo(tela):
                 elif event.key == pygame.K_e:
                     espada = None
                     if any(isinstance(objeto, Espada) for objeto in vertice_atual.objetos):
-                        mensagem = fonte.render("Você tem " + str(jogador.ataque) + " de dano de ataque atual deseja aumentar (S/N)?",
+                        mensagem = fonte.render("Você tem " + str(jogador.ataque) + " de dano de ataque atual deseja alterar (S/N)?",
                             True, AMARELO)
                         tela.blit(mensagem, (TELA_MENU_LARGURA // 2 - mensagem.get_width() // 2, 765))
                         pygame.display.flip()
@@ -187,7 +190,7 @@ def iniciar_jogo(tela):
                 elif event.key == pygame.K_p:
                     pistola = None
                     if any(isinstance(objeto, Pistola) for objeto in vertice_atual.objetos):
-                        mensagem = fonte.render("Você tem " + str(jogador.ataque) + " de dano de ataque atual deseja aumentar (S/N)?",
+                        mensagem = fonte.render("Você tem " + str(jogador.ataque) + " de dano de ataque atual deseja alterar (S/N)?",
                             True, AMARELO)
                         tela.blit(mensagem, (TELA_MENU_LARGURA // 2 - mensagem.get_width() // 2, 765))
                         pygame.display.flip()
@@ -226,11 +229,12 @@ def iniciar_jogo(tela):
 
         #Aplicar busca em largura para ter uma lista da sequência de nós que devem ser visitados
         #jogador.BFS(ilha, vertice_atual)
+
         #jogador.DFS(ilha,vertice_atual)
 
         # Verifique se passaram 5 segundos
         tempo_atual = pygame.time.get_ticks()
-        if (tempo_atual - tempo_anterior) >= 8000:  # 5 segundos em milissegundos
+        if (tempo_atual - tempo_anterior) >= 3000:  # 5 segundos em milissegundos
             relogio.update_time()
             tempo_anterior = tempo_atual
             # Mover jogador com base na busca em largura
@@ -248,13 +252,39 @@ def iniciar_jogo(tela):
         pygame.display.update()
 
         #Condição de derrota
-        if ((jogador.vida == 0) or (relogio.tempo_atual == relogio.tempo_limite)):
-            if(jogador.vida == 0):
-                 print("Perdeu porque a vida do jogador chegou em 0")
+        if ((jogador.vida <= 0) or (relogio.tempo_atual == relogio.tempo_limite)):
+            if(jogador.vida <= 0):
+                mensagem = fonte.render("Você tem PERDEU o jogo porque sua vida chegou a"+str(jogador.vida)+"! (S-> sair)",True, VERMELHO)
+                tela.blit(mensagem, (TELA_MENU_LARGURA // 2 - mensagem.get_width() // 2, 765))
+                pygame.display.flip()
+
+                # Espere pela resposta do usuário
+                esperando_resposta = True
+                while esperando_resposta:
+                    for event in pygame.event.get():
+                        if event.type == pygame.KEYDOWN:
+                            if event.key == pygame.K_s:
+                                esperando_resposta = False
+
+                print("Perdeu porque a vida do jogador chegou em 0")
             elif(relogio.tempo_atual == relogio.tempo_limite):
+                mensagem = fonte.render(
+                    "Você tem PERDEU o jogo porque o tempo EXPIROU!" + str(jogador.vida) + " (S-> sair).", True,
+                    VERMELHO)
+                tela.blit(mensagem, (TELA_MENU_LARGURA // 2 - mensagem.get_width() // 2, 765))
+                pygame.display.flip()
+
+                # Espere pela resposta do usuário
+                esperando_resposta = True
+                while esperando_resposta:
+                    for event in pygame.event.get():
+                        if event.type == pygame.KEYDOWN:
+                            if event.key == pygame.K_s:
+                                esperando_resposta = False
                 print("Perdeu porque o tempo expirou")
             rodar = False
 
+        #Implementação de Sofrer Dano por perigos e Sofrer Dano por batalhas
         for objeto in vertice_atual.objetos:
 
             gasVenenoso = None
@@ -327,6 +357,62 @@ def iniciar_jogo(tela):
                             elif event.key == pygame.K_UNKNOWN:
                                 esperando_resposta = False
                                 break
+
+            inimigo = None
+            if isinstance(objeto,(Crocodilo,Onca,Formiga)):
+
+                mensagem = fonte.render("Esse vértice possui uma criatura , você deseja enfrentá-la? (S/N)",True, AMARELO)
+                mensagem_posicao_tela = (TELA_MENU_LARGURA // 2 - mensagem.get_width() // 2, 765)
+
+                tela.blit(mensagem, mensagem_posicao_tela)
+                pygame.display.flip()
+
+                for objeto in vertice_atual.objetos:
+                    if isinstance(objeto, (Crocodilo,Onca,Formiga)):
+                        inimigo = objeto
+
+                # Espere pela resposta do usuário
+                esperando_resposta = True
+                while esperando_resposta:
+                    for event in pygame.event.get():
+                        if event.type == pygame.KEYDOWN:
+
+                            if event.key == pygame.K_s:
+                                if inimigo is not None:
+                                   # jogador.batalhar(inimigo)
+                                    pass
+                                esperando_resposta = False
+
+
+                            elif event.key == pygame.K_n:
+                                #Jogador deve sofer o dano da criatura
+                                if inimigo is not None:
+                                    dano = inimigo.ataque
+                                    jogador.vida = jogador.vida - dano
+
+                                    ilha.mover_criaturas(inimigo,jogador.posicao)
+
+                                    pygame.draw.rect(tela, PRETO, (0, 765, TELA_MENU_LARGURA, 500))
+
+                                    mensagem = fonte.render(
+                                        "Você sofreu "+str(inimigo.ataque)+" de dano do "+inimigo.nome+" (S para continuar)", True,
+                                        AMARELO)
+                                    tela.blit(mensagem, (TELA_MENU_LARGURA // 2 - mensagem.get_width() // 2, 765))
+                                    pygame.display.flip()
+
+                                    esperando_resposta = True
+                                    while esperando_resposta:
+                                        for event in pygame.event.get():
+                                            if event.type == pygame.KEYDOWN:
+                                                if event.key == pygame.K_s:
+                                                    esperando_resposta = False
+
+                                esperando_resposta = False
+                                break
+
+
+
+
 
 
     # Encerre o Pygame

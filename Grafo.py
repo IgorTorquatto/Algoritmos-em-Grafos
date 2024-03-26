@@ -219,3 +219,23 @@ class Grafo:
                     print(elemento.descricao + "removido")
                     print(vertice_que_o_jogador_esta.objetos)
             self.qtd_armas -= 1
+
+        def mover_criaturas(self,criatura,posicao):
+
+            #Pegar a criatura e colocar em outro vertice
+
+            vertice_que_a_criatura_esta = self.acessar_vertice_por_indice(posicao)
+            criatura_removida =  vertice_que_a_criatura_esta.objetos.remove(criatura)
+
+            if (posicao -1 == 0):  #garantir que criatura não se mova para a praia
+                #Nesse caso o inimigo se move para a posição da frente
+                posicao_posterior = posicao +1
+                vertice_da_posicao_posterior = self.acessar_vertice_por_indice(posicao_posterior)
+                vertice_da_posicao_posterior.objetos.append(criatura_removida)
+                print("Criatura " + criatura.nome+ " movida de "+str(vertice_que_a_criatura_esta.indice)+"para "+str(vertice_da_posicao_posterior.indice))
+            else:
+                #Adicionar criatura  no vértice anterior
+                posicao_anterior = posicao - 1
+                vertice_da_posicao_anterior = self.acessar_vertice_por_indice(posicao_anterior)
+                vertice_da_posicao_anterior.objetos.append(criatura_removida)
+                print("Criatura " + criatura.nome + " movida de " + str(vertice_que_a_criatura_esta.indice) + "para " + str(vertice_da_posicao_anterior.indice))

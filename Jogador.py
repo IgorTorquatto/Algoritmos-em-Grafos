@@ -15,6 +15,7 @@ class Jogador:
         self.posicao = 0  # Posição inicial do jogador é o primeiro vértice da ilha
         self.vida = 100
         self.ataque = 50
+        self.arma = False
         self.nome_arma = "Nenhum"
         self.duracao_arma_atual = 0
         self.tesouro_transportado = 0
@@ -116,6 +117,7 @@ class Jogador:
             marca[w] = 'preto' '''
 
 
+
     def desenhar_personagem(self, tela):
         posicao_x, posicao_y = self.ilha.vertices[self.posicao].posicao
         pygame.draw.circle(tela, VERMELHO, (posicao_x, posicao_y), 20)
@@ -162,7 +164,10 @@ class Jogador:
     def equipar_arma(self,arma):
 
         dano_arma = arma.dano
-        self.ataque+= dano_arma
+        dano_de_ataque_base = 50
+
+        self.arma = True
+        self.ataque= dano_arma + dano_de_ataque_base
         self.duracao_arma_atual = arma.duracao
         self.nome_arma = arma.nome
 
