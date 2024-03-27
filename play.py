@@ -1,7 +1,5 @@
 import sys
-
 import pygame
-
 from constantes import *
 from Grafo import Grafo
 from Jogador import Jogador
@@ -234,9 +232,10 @@ def iniciar_jogo(tela):
 
         # Verifique se passaram 5 segundos
         tempo_atual = pygame.time.get_ticks()
-        if (tempo_atual - tempo_anterior) >= 3000:  # 5 segundos em milissegundos
+        if (tempo_atual - tempo_anterior) >= 10000:  # 5 segundos em milissegundos
             relogio.update_time()
             tempo_anterior = tempo_atual
+
             # Mover jogador com base na busca em largura
             #jogador.mover_jogador_bfs(vertice_atual)
 
@@ -379,8 +378,8 @@ def iniciar_jogo(tela):
 
                             if event.key == pygame.K_s:
                                 if inimigo is not None:
-                                   # jogador.batalhar(inimigo)
-                                    pass
+                                    turnos = 3
+                                    jogador.batalhar(inimigo,tela,turnos,vertice_atual)
                                 esperando_resposta = False
 
 
@@ -395,7 +394,7 @@ def iniciar_jogo(tela):
                                     pygame.draw.rect(tela, PRETO, (0, 765, TELA_MENU_LARGURA, 500))
 
                                     mensagem = fonte.render(
-                                        "Você sofreu "+str(inimigo.ataque)+" de dano do "+inimigo.nome+" (S para continuar)", True,
+                                        "Você fugiu e sofreu "+str(inimigo.ataque)+" de dano de "+inimigo.nome+" (S para continuar)", True,
                                         AMARELO)
                                     tela.blit(mensagem, (TELA_MENU_LARGURA // 2 - mensagem.get_width() // 2, 765))
                                     pygame.display.flip()
@@ -409,11 +408,6 @@ def iniciar_jogo(tela):
 
                                 esperando_resposta = False
                                 break
-
-
-
-
-
 
     # Encerre o Pygame
     pygame.quit()
