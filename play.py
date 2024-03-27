@@ -1,7 +1,5 @@
 import sys
-
 import pygame
-
 from constantes import *
 from Grafo import Grafo
 from Jogador import Jogador
@@ -234,9 +232,10 @@ def iniciar_jogo(tela):
 
         # Verifique se passaram 5 segundos
         tempo_atual = pygame.time.get_ticks()
-        if (tempo_atual - tempo_anterior) >= 3000:  # 5 segundos em milissegundos
+        if (tempo_atual - tempo_anterior) >= 10000:  # 5 segundos em milissegundos
             relogio.update_time()
             tempo_anterior = tempo_atual
+
             # Mover jogador com base na busca em largura
             #jogador.mover_jogador_bfs(vertice_atual)
 
@@ -379,9 +378,8 @@ def iniciar_jogo(tela):
 
                             if event.key == pygame.K_s:
                                 if inimigo is not None:
-                                    vertice_que_o_jogador_esta = ilha.acessar_vertice_por_indice(jogador.posicao)
                                     turnos = 3
-                                    jogador.batalhar(inimigo,tela,turnos,vertice_que_o_jogador_esta)
+                                    jogador.batalhar(inimigo,tela,turnos,vertice_atual)
                                 esperando_resposta = False
 
 
@@ -410,11 +408,6 @@ def iniciar_jogo(tela):
 
                                 esperando_resposta = False
                                 break
-
-
-
-
-
 
     # Encerre o Pygame
     pygame.quit()

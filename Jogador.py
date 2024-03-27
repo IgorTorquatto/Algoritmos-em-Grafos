@@ -179,6 +179,9 @@ class Jogador:
         vertice_que_o_jogador_esta = vertice_jogador
         print("O duelo irá começar")
         fonte = pygame.font.Font(None, 25)
+        print(vertice_que_o_jogador_esta)
+        print(vertice_que_o_jogador_esta.indice)
+        print(vertice_que_o_jogador_esta.objetos)
 
         #Imprimir que o duelo vai começar
         print("O duelo está acontecendo no turno: "+ str(turnos_duelo))
@@ -200,8 +203,11 @@ class Jogador:
 
                             #Verifica se a criatura morreu:
                             if(inimigo.vida <= 0 ):
-                                print("Você matou criatura morreu")
+                                print("Você matou " + inimigo.nome)
                                 vertice_que_o_jogador_esta.objetos.remove(inimigo)
+                                print(inimigo.nome + "removido de vértice" + str(vertice_que_o_jogador_esta.indice))
+                                self.ilha.qtd_inimigos = self.ilha.qtd_inimigos-1
+                                self.posicao = vertice_que_o_jogador_esta.indice
                                 return
 
                             turnos_duelo = turnos_duelo -1
@@ -226,7 +232,8 @@ class Jogador:
 
                         # Verifica se o jogador morreu:
                         if (self.vida <= 0):
-                            print("Você morreu no duelo conta"+inimigo.nome)
+                            print("Você morreu no duelo contra"+inimigo.nome)
+                            self.posicao = vertice_que_o_jogador_esta.indice
                             return
 
                         turnos_duelo = turnos_duelo - 1
@@ -250,8 +257,11 @@ class Jogador:
 
                         # Verifica se a criatura morreu:
                         if (inimigo.vida <= 0):
-                            print("Você matou criatura morreu")
+                            print("Você matou "+inimigo.nome)
                             vertice_que_o_jogador_esta.objetos.remove(inimigo)
+                            print(inimigo.nome+"removido de vértice"+str(vertice_que_o_jogador_esta.indice))
+                            self.ilha.qtd_inimigos = self.ilha.qtd_inimigos - 1
+                            self.posicao = vertice_que_o_jogador_esta.indice
                             return
 
                         turnos_duelo = turnos_duelo - 1
@@ -259,4 +269,5 @@ class Jogador:
 
         print("O duelo chegou no turno: " + str(turnos_duelo))
         if(turnos_duelo == 0):
+            self.posicao = vertice_que_o_jogador_esta.indice
             return
