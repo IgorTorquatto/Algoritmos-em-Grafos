@@ -201,6 +201,14 @@ class Jogador:
                             #Vez do jogador:
                             inimigo.vida= inimigo.vida - self.ataque
 
+                            if(self.arma == True):
+                                self.duracao_arma_atual= self.duracao_arma_atual -1
+
+                            if (self.duracao_arma_atual == 0):
+                                self.arma = False
+                                self.nome_arma = "Nenhum"
+                                self.ataque = 50
+
                             #Verifica se a criatura morreu:
                             if(inimigo.vida <= 0 ):
                                 print("Você matou " + inimigo.nome)
@@ -230,6 +238,17 @@ class Jogador:
                         # Vez da Criatura:
                         self.vida = self.vida - inimigo.ataque
 
+                        numero_tesouro_antes_dano = self.tesouro_transportado
+
+                        percentual_vida_apos_dano = self.vida / 100
+
+                        # Atualizar novo numero do tesouro transportado
+                        numero_tesouro_atualizado = numero_tesouro_antes_dano * percentual_vida_apos_dano
+
+                        self.tesouro_transportado = numero_tesouro_atualizado
+
+                        print(f"Após o dano de criatura você tinha {str(numero_tesouro_antes_dano)} e agora tem {str(numero_tesouro_atualizado)} de tesouro")
+
                         # Verifica se o jogador morreu:
                         if (self.vida <= 0):
                             print("Você morreu no duelo contra"+inimigo.nome)
@@ -254,6 +273,14 @@ class Jogador:
                     if event.key == pygame.K_s:
                         # Vez do jogador:
                         inimigo.vida = inimigo.vida - self.ataque
+
+                        if (self.arma == True):
+                            self.duracao_arma_atual = self.duracao_arma_atual - 1
+
+                        if(self.duracao_arma_atual == 0):
+                            self.arma = False
+                            self.nome_arma = "Nenhum"
+                            self.ataque = 50
 
                         # Verifica se a criatura morreu:
                         if (inimigo.vida <= 0):

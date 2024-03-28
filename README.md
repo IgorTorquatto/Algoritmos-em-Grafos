@@ -28,6 +28,18 @@ python main.py
 - Além disso, durante o jogo, o jogador receberá informações e instruções na interface gráfica do Pygame e no prompt de comando.
 - Caso morra o jogador tem direito a voltar a um checkpoint somente uma vez. Os vértices 0 e 12 do grafo são esses vértices especiais. Porém, só serão restaurados seus pontos de vida e sua posição no último checkpoint, objetos que ele carregava antes de morrer como armas não serão recuperados.
 
+### Comandos na Ilha
+
+- Se o jogador estiver em um vértice com adaga, teclar `a` para pegar.
+- Se estiver em um vértice com espada, teclar `e` para pegar.
+- Para pistola, teclar `p`.
+- Para planta medicinal, teclar `espaço`.
+- Se o jogador estiver na praia, teclar `espaço` para embarcar e encerrar o jogo.
+- Se estiver em um vértice com criatura, teclar `s` para duelar ou `n` para fugir.
+- Em um vértice com perigo, teclar `s` para receber o dano e ir para o próximo vértice.
+- Se estiver em um vértice com tesouro, teclar `c` para capturar.
+
+
 ### Saídas
 - Durante a execução, o prompt de comando exibirá informações como a matriz de adjacências, lista de adjacências, lista de vértices e outras informações relevantes do que vai acontecendo durante o jogo.
 - A interface gráfica do Pygame é a principal forma de mostrar ao jogador o que está acontecendo na ilha/grafo enquando ele joga.
