@@ -23,11 +23,11 @@ def iniciar_jogo(tela):
     ilha = Grafo()  # Inicializa o grafo da ilha
     ilha.preencher_grafo()
 
-    ilha.qtd_inimigos = 3 #definindo quantidade de inimigos
+    ilha.qtd_inimigos = 3 #definindo quantidade de inimigos 
     ilha.qtd_plantas = 5 #definindo quantidade de plantas
     ilha.qtd_armas = 2 #definindo quantidade de armas
     ilha.qtd_perigos = 2 #definindo quantidade de perigos na ilha
-    ilha.qtd_tesouros = 10 #defininfo quantidade de tesouros
+    ilha.qtd_tesouros = 10 #definindo quantidade de tesouros
 
     pygame.mixer.music.stop()
     pygame.mixer.music.load(MUSICA_JOGO)
@@ -416,6 +416,18 @@ def iniciar_jogo(tela):
                                 if inimigo is not None:
                                     dano = inimigo.ataque
                                     jogador.vida = jogador.vida - dano
+
+                                    numero_tesouro_antes_dano = jogador.tesouro_transportado
+
+                                    percentual_vida_apos_dano = jogador.vida / 100
+
+                                    # Atualizar novo numero do tesouro transportado
+                                    numero_tesouro_atualizado = numero_tesouro_antes_dano * percentual_vida_apos_dano
+
+                                    jogador.tesouro_transportado = numero_tesouro_atualizado
+
+                                    print(
+                                        f"Após o dano de criatura você tinha {str(numero_tesouro_antes_dano)} e agora tem {str(numero_tesouro_atualizado)} de tesouro")
 
                                     ilha.mover_criaturas(inimigo,jogador.posicao)
 
