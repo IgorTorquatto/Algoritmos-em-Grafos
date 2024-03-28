@@ -271,3 +271,30 @@ class Jogador:
         if(turnos_duelo == 0):
             self.posicao = vertice_que_o_jogador_esta.indice
             return
+
+
+    def reviver(self):
+
+        #Reviver em 0 | 12
+        primeiro_check = [12,17,22,3,8,13,18,23,4,9,14,19,24]
+        segundo_check = [0,5,10,15,20,1,6,11,16,21,2,7,12]
+
+
+        #Reviver o jogador
+
+        if(self.posicao not in segundo_check):
+            self.posicao = 12
+        if(self.posicao not in primeiro_check):
+            self.visitados.clear()
+            self.posicao = 0
+
+
+        self.vida = 100
+        self.ataque = 50
+        self.arma = False
+        self.nome_arma = "Nenhum"
+        self.duracao_arma_atual = 0
+
+        print("Jogador gastou um checkpoint!")
+
+        return False

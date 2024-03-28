@@ -103,6 +103,21 @@ class Grafo:
                     # Desenha uma linha entre o vértice atual e seu vizinho
                     pygame.draw.line(tela, MARROM, vertice.posicao, vizinho.posicao, 2)
 
+        def desenhar_checkpoints(self,tela):
+
+            #Para desenhar os checkpoints vamos considerar os vértices:
+            # 0-> praia 12-> metade do grafo
+
+            # A praia é o primeiro checkpoint
+            checkpoint_tres = self.acessar_vertice_por_indice(0)
+            pygame.draw.circle(tela, AZUL, checkpoint_tres.posicao, 10)
+
+            #Metade do caminho
+            checkpoint_um= self.acessar_vertice_por_indice(12)
+            pygame.draw.circle(tela,AZUL,checkpoint_um.posicao,10)
+
+
+
         def imprimir_objetos_dos_vertices(self):
             for vertice in self.vertices:
                 print(f"Índice do vértice: {vertice.indice}")
@@ -171,7 +186,8 @@ class Grafo:
             #Se tiver algum objeto no vértice:
             if vertice_que_o_jogador_esta.objetos:
                 # Se a lista de objetos do vértice não estiver vazia, retorna a descrição de cada objeto
-                descricoes = [objeto.descricao for objeto in vertice_que_o_jogador_esta.objetos]
+                # Se a lista de objetos do vértice não estiver vazia, retorna a descrição de cada objeto
+                descricoes = [objeto.descricao for objeto in vertice_que_o_jogador_esta.objetos if objeto is not None]
 
                 return descricoes
             elif indice_vertice_posicao_jogador ==0:

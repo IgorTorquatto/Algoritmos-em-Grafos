@@ -23,11 +23,11 @@ def iniciar_jogo(tela):
     ilha = Grafo()  # Inicializa o grafo da ilha
     ilha.preencher_grafo()
 
-    ilha.qtd_inimigos = 5 #definindo quantidade de inimigos
+    ilha.qtd_inimigos = 3 #definindo quantidade de inimigos
     ilha.qtd_plantas = 5 #definindo quantidade de plantas
-    ilha.qtd_armas = 3 #definindo quantidade de armas
-    ilha.qtd_perigos = 3 #definindo quantidade de perigos na ilha
-    ilha.qtd_tesouros = 5 #defininfo quantidade de tesouros
+    ilha.qtd_armas = 2 #definindo quantidade de armas
+    ilha.qtd_perigos = 2 #definindo quantidade de perigos na ilha
+    ilha.qtd_tesouros = 10 #defininfo quantidade de tesouros
 
     pygame.mixer.music.stop()
     pygame.mixer.music.load(MUSICA_JOGO)
@@ -59,6 +59,7 @@ def iniciar_jogo(tela):
     rodar = True
     tempo_anterior = pygame.time.get_ticks()
     fonte = pygame.font.Font(None, 25)
+    checkpoint = True
 
     while rodar:
         #Sempre capturar o vertice atual que o jogador está:
@@ -221,6 +222,7 @@ def iniciar_jogo(tela):
 
         # Desenhe a ilha
         ilha.desenhar_ilha(tela)
+        ilha.desenhar_checkpoints(tela)
 
         # Personagem
         jogador.desenhar_personagem(tela)
@@ -232,7 +234,7 @@ def iniciar_jogo(tela):
 
         # Verifique se passaram 5 segundos
         tempo_atual = pygame.time.get_ticks()
-        if (tempo_atual - tempo_anterior) >= 10000:  # 5 segundos em milissegundos
+        if (tempo_atual - tempo_anterior) >= 10000:  # segundos em milissegundos
             relogio.update_time()
             tempo_anterior = tempo_atual
 
@@ -252,7 +254,7 @@ def iniciar_jogo(tela):
 
         #Condição de derrota
         if ((jogador.vida <= 0) or (relogio.tempo_atual == relogio.tempo_limite)):
-            if(jogador.vida <= 0):
+            if(jogador.vida <= 0 and checkpoint == False):
                 mensagem = fonte.render("Você tem PERDEU o jogo porque sua vida chegou a"+str(jogador.vida)+"! (S-> sair)",True, VERMELHO)
                 tela.blit(mensagem, (TELA_MENU_LARGURA // 2 - mensagem.get_width() // 2, 765))
                 pygame.display.flip()
@@ -266,6 +268,32 @@ def iniciar_jogo(tela):
                                 esperando_resposta = False
 
                 print("Perdeu porque a vida do jogador chegou em 0")
+                rodar = False
+
+            elif(jogador.vida <= 0 and checkpoint == True):
+                mensagem = fonte.render(
+                    "Você morreu pois sua vida = " + str(jogador.vida) + ", mas você pode utilizar um checkpoint! (S-> Usar checkpoint N-> Acabar jogo)", True,
+                    AZUL)
+                tela.blit(mensagem, (TELA_MENU_LARGURA // 2 - mensagem.get_width() // 2, 765))
+                pygame.display.flip()
+
+                # Espere pela resposta do usuário
+                esperando_resposta = True
+                while esperando_resposta:
+                    for event in pygame.event.get():
+                        if event.type == pygame.KEYDOWN:
+                            if event.key == pygame.K_s:
+                                #Colocar jogador na posicao do checkpoint:
+                                #chamar isso numa funcao
+                                checkpoint = jogador.reviver()
+                                esperando_resposta = False
+                            if event.key == pygame.K_n:
+                                esperando_resposta = False
+                                print("Perdeu porque a vida do jogador chegou em 0")
+                                rodar = False
+
+
+
             elif(relogio.tempo_atual == relogio.tempo_limite):
                 mensagem = fonte.render(
                     "Você tem PERDEU o jogo porque o tempo EXPIROU!" + str(jogador.vida) + " (S-> sair).", True,
@@ -281,7 +309,7 @@ def iniciar_jogo(tela):
                             if event.key == pygame.K_s:
                                 esperando_resposta = False
                 print("Perdeu porque o tempo expirou")
-            rodar = False
+                rodar = False
 
         #Implementação de Sofrer Dano por perigos e Sofrer Dano por batalhas
         for objeto in vertice_atual.objetos:
