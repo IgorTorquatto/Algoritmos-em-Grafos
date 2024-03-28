@@ -26,6 +26,7 @@ python main.py
 - O principal objetivo do jogador é coletar o máximo de tesouro possível e retornar à praia.
 - Ao sofrer dano, a capacidade de coletar um novo tesouro reduzirá a menos que o jogador consiga se curar consumindo uma planta medicinal. O tesouro que estava com o jogador no momento que sofre dano também reduzirá. Todas as regras de redução, em porcentagem, seguem as especificações do projeto.
 - Além disso, durante o jogo, o jogador receberá informações e instruções na interface gráfica do Pygame e no prompt de comando.
+- Caso morra o jogador tem direito a voltar a um checkpoint somente uma vez. Os vértices 0 e 12 do grafo são esses vértices especiais. Porém, só serão restaurados seus pontos de vida e sua posição no último checkpoint, objetos que ele carregava antes de morrer como armas não serão recuperados.
 
 ### Saídas
 - Durante a execução, o prompt de comando exibirá informações como a matriz de adjacências, lista de adjacências, lista de vértices e outras informações relevantes do que vai acontecendo durante o jogo.
