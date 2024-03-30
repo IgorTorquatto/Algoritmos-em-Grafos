@@ -39,7 +39,7 @@ class Jogador:
     def aumentar_tesouro(self,valor):
         self.tesouro_transportado+= valor
 
-    #Mover jogador entre todos os vértices e depois até a praia novamente pelo caminho mais curto:
+    #Mover jogador entre todos os vértices e depois até a praia novamente:
     def mover_jogador(self,vertice: Vertice , grafo: Grafo):
 
         if (len(self.visitados) == grafo.qtd_vertices): # Quando chega no último vértice limpa a lista de visitados e começa a mover o jogador novamente a partir do último vértice

@@ -70,6 +70,11 @@ class Grafo:
             for linha in matriz_adjacencias:
                 print(linha)
 
+        def imprimir_objetos_dos_vertices(self):
+            for vertice in self.vertices:
+                print(f"Índice do vértice: {vertice.indice}")
+                print(f"Lista de objetos: {vertice.objetos}")
+
         def acessar_vertice_por_indice(self, indice):
             for lista_vertices in self.grafo.values():
                 for vertice in lista_vertices:
@@ -116,12 +121,6 @@ class Grafo:
             checkpoint_um= self.acessar_vertice_por_indice(12)
             pygame.draw.circle(tela,AZUL,checkpoint_um.posicao,10)
 
-
-
-        def imprimir_objetos_dos_vertices(self):
-            for vertice in self.vertices:
-                print(f"Índice do vértice: {vertice.indice}")
-                print(f"Lista de objetos: {vertice.objetos}")
 
         def distribuir_plantas(self):
             vertices_indices = list(range(1, self.qtd_vertices))
@@ -186,7 +185,6 @@ class Grafo:
             #Se tiver algum objeto no vértice:
             if vertice_que_o_jogador_esta.objetos:
                 # Se a lista de objetos do vértice não estiver vazia, retorna a descrição de cada objeto
-                # Se a lista de objetos do vértice não estiver vazia, retorna a descrição de cada objeto
                 descricoes = [objeto.descricao for objeto in vertice_que_o_jogador_esta.objetos if objeto is not None]
 
                 return descricoes
@@ -195,6 +193,30 @@ class Grafo:
             else:
                 # Se a lista de objetos do vértice estiver vazia, retorna que o vértice está vazio
                 return ["Vertice sem nenhum objeto"]
+
+        def mover_criaturas(self, criatura, posicao):
+
+            # Pegar a criatura e colocar em outro vertice
+
+            vertice_que_a_criatura_esta = self.acessar_vertice_por_indice(posicao)
+            criatura_removida = vertice_que_a_criatura_esta.objetos.remove(criatura)
+
+            if (posicao - 1 == 0):  # garantir que criatura não se mova para a praia
+                # Nesse caso o inimigo se move para a posição da frente
+                posicao_posterior = posicao + 1
+                vertice_da_posicao_posterior = self.acessar_vertice_por_indice(posicao_posterior)
+                vertice_da_posicao_posterior.objetos.append(criatura_removida)
+                print("Criatura " + criatura.nome + " movida de vertice-indice" + str(
+                    vertice_que_a_criatura_esta.indice) + "para vertice-indice" + str(
+                    vertice_da_posicao_posterior.indice))
+            else:
+                # Adicionar criatura  no vértice anterior
+                posicao_anterior = posicao - 1
+                vertice_da_posicao_anterior = self.acessar_vertice_por_indice(posicao_anterior)
+                vertice_da_posicao_anterior.objetos.append(criatura_removida)
+                print("Criatura " + criatura.nome + " movida de vertice-indice" + str(
+                    vertice_que_a_criatura_esta.indice) + " para vertice-indice" + str(
+                    vertice_da_posicao_anterior.indice))
 
         def remover_planta(self,posicao,planta:Planta):
             vertice_que_o_jogador_esta = self.acessar_vertice_por_indice(posicao)
@@ -236,22 +258,3 @@ class Grafo:
                     print(vertice_que_o_jogador_esta.objetos)
             self.qtd_armas -= 1
 
-        def mover_criaturas(self,criatura,posicao):
-
-            #Pegar a criatura e colocar em outro vertice
-
-            vertice_que_a_criatura_esta = self.acessar_vertice_por_indice(posicao)
-            criatura_removida =  vertice_que_a_criatura_esta.objetos.remove(criatura)
-
-            if (posicao -1 == 0):  #garantir que criatura não se mova para a praia
-                #Nesse caso o inimigo se move para a posição da frente
-                posicao_posterior = posicao +1
-                vertice_da_posicao_posterior = self.acessar_vertice_por_indice(posicao_posterior)
-                vertice_da_posicao_posterior.objetos.append(criatura_removida)
-                print("Criatura " + criatura.nome+ " movida de vertice-indice"+str(vertice_que_a_criatura_esta.indice)+"para vertice-indice"+str(vertice_da_posicao_posterior.indice))
-            else:
-                #Adicionar criatura  no vértice anterior
-                posicao_anterior = posicao - 1
-                vertice_da_posicao_anterior = self.acessar_vertice_por_indice(posicao_anterior)
-                vertice_da_posicao_anterior.objetos.append(criatura_removida)
-                print("Criatura " + criatura.nome + " movida de vertice-indice" + str(vertice_que_a_criatura_esta.indice) + " para vertice-indice" + str(vertice_da_posicao_anterior.indice))
