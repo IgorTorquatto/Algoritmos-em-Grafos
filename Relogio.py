@@ -7,7 +7,7 @@ class Relogio:
         self.tempo_limite = 3 * 25
 
     def update_time(self):
-        # Atualiza o tempo a cada 5 segundos
+        # Atualiza o tempo a cada 10 segundos
         self.tempo_atual += 1
 
     def draw(self, tela):

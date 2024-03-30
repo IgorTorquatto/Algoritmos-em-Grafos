@@ -23,7 +23,7 @@ def iniciar_jogo(tela):
     ilha = Grafo()  # Inicializa o grafo da ilha
     ilha.preencher_grafo()
 
-    ilha.qtd_inimigos = 3 #definindo quantidade de inimigos 
+    ilha.qtd_inimigos = 3 #definindo quantidade de inimigos
     ilha.qtd_plantas = 5 #definindo quantidade de plantas
     ilha.qtd_armas = 2 #definindo quantidade de armas
     ilha.qtd_perigos = 2 #definindo quantidade de perigos na ilha
@@ -229,10 +229,9 @@ def iniciar_jogo(tela):
 
         #Aplicar busca em largura para ter uma lista da sequência de nós que devem ser visitados
         #jogador.BFS(ilha, vertice_atual)
-
         #jogador.DFS(ilha,vertice_atual)
 
-        # Verifique se passaram 5 segundos
+        # Verifique se passaram 10 segundos
         tempo_atual = pygame.time.get_ticks()
         if (tempo_atual - tempo_anterior) >= 10000:  # segundos em milissegundos
             relogio.update_time()
